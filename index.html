@@ -3,24 +3,24 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>AccesoQR · Pase de visita</title>
+<title>AccesoQR · Pase de visita · TecNM Matehuala</title>
 <meta name="description" content="Cada visita registrada, cada puerta bajo control.">
-<meta name="theme-color" content="#12264A">
+<meta name="theme-color" content="#1B396A">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="AccesoQR">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%2312264A'/%3E%3Cg fill='none' stroke='%23fff' stroke-width='6'%3E%3Crect x='17' y='17' width='26' height='26' rx='3'/%3E%3Crect x='57' y='17' width='26' height='26' rx='3'/%3E%3Crect x='17' y='57' width='26' height='26' rx='3'/%3E%3C/g%3E%3Cpath d='M56 71L66 81L85 58' fill='none' stroke='%232A8C86' stroke-width='9' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%231B396A'/%3E%3Cg fill='none' stroke='%23fff' stroke-width='6'%3E%3Crect x='17' y='17' width='26' height='26' rx='3'/%3E%3Crect x='57' y='17' width='26' height='26' rx='3'/%3E%3Crect x='17' y='57' width='26' height='26' rx='3'/%3E%3C/g%3E%3Cpath d='M56 71L66 81L85 58' fill='none' stroke='%23B38E5D' stroke-width='9' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
 <style>
-/* ===== AccesoQR · estilos (paleta de tu manual de identidad) ===== */
+/* ===== AccesoQR · estilos (Paleta Institucional TecNM Campus Matehuala) ===== */
 :root{
-  --navy:#12264A;--navy-700:#1B3563;--teal:#2A8C86;--teal-600:#237873;--teal-50:#E6F2F1;
-  --orange:#C8641E;--orange-700:#A8500F;--orange-50:#FDF1E7;--slate:#5A6472;--mist:#F2F6F9;--line:#D5DDE6;
-  --red-700:#A12A2A;--radius:18px;--shadow:0 1px 2px rgba(18,38,74,.06),0 8px 24px rgba(18,38,74,.08);
+  --navy:#1B396A;--navy-700:#13294B;--teal:#B38E5D;--teal-600:#9A7646;--teal-50:#F7F2EA;
+  --orange:#800020;--orange-700:#610018;--orange-50:#F9ECEF;--slate:#54585A;--mist:#F4F6F9;--line:#D6DCE5;
+  --red-700:#800020;--radius:18px;--shadow:0 1px 2px rgba(27,57,106,.06),0 8px 24px rgba(27,57,106,.08);
   --font:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;color-scheme:light;
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -34,16 +34,16 @@ button,input,select,textarea{font:inherit;color:inherit}
 .wrap{max-width:520px;margin:0 auto;padding:0 16px}
 
 /* Encabezado */
-.top{background:var(--navy);color:#fff;border-bottom:3px solid var(--teal);padding:calc(10px + env(safe-area-inset-top)) 0 10px;
-  background-image:linear-gradient(135deg,rgba(42,140,134,.22),transparent 60%);position:sticky;top:0;z-index:20}
+.top{background:var(--navy);color:#fff;border-bottom:4px solid var(--teal);padding:calc(10px + env(safe-area-inset-top)) 0 10px;
+  background-image:linear-gradient(135deg,rgba(179,142,93,.22),transparent 65%);position:sticky;top:0;z-index:20}
 .top .wrap{display:flex;align-items:center;gap:12px}
-.top img{border-radius:10px}
-.top strong{font-size:20px;font-weight:800;letter-spacing:-.01em;display:block;line-height:1.1}
-.top small{color:#9AD6D1;font-size:12px;font-weight:500}
-.modo{margin-left:auto;border:0;background:rgba(255,255,255,.12);color:#fff;border-radius:999px;padding:6px 12px;font-size:12px;font-weight:700;cursor:pointer;
-  display:inline-flex;align-items:center;gap:6px;min-height:36px}
-.modo::before{content:"";width:8px;height:8px;border-radius:50%;background:#6FD3CC}
-.modo.demo::before{background:#F2A365}
+.top img,.top .logo-tec{border-radius:10px;flex:none}
+.top strong{font-size:19px;font-weight:800;letter-spacing:-.01em;display:block;line-height:1.1}
+.top small{color:#E6D3B5;font-size:11.5px;font-weight:600;display:block;margin-top:2px}
+.modo{margin-left:auto;border:1px solid rgba(255,255,255,.22);background:rgba(255,255,255,.12);color:#fff;border-radius:999px;padding:6px 12px;font-size:12px;font-weight:700;cursor:pointer;
+  display:inline-flex;align-items:center;gap:6px;min-height:36px;white-space:nowrap}
+.modo::before{content:"";width:8px;height:8px;border-radius:50%;background:#6EE7B7}
+.modo.demo::before{background:#FCD34D}
 
 main{padding-top:20px}
 .view{animation:entra .25s ease both}
@@ -61,9 +61,9 @@ label,legend{display:block;font-weight:600;font-size:14px;margin:0 0 6px;padding
 .req{color:var(--orange-700)}
 input[type=text],input[type=date],input[type=time],select,textarea{width:100%;min-height:50px;padding:10px 14px;border:1.5px solid #BFCAD6;border-radius:12px;background:#fff;font-size:16px}
 textarea{min-height:84px;resize:vertical}
-select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5l5 5 5-5' fill='none' stroke='%235A6472' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:38px}
-input:focus-visible,select:focus-visible,textarea:focus-visible{outline:none;border-color:var(--teal);box-shadow:0 0 0 4px rgba(42,140,134,.22)}
-.invalid input,.invalid select{border-color:var(--orange);background:#FFFBF7}
+select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5l5 5 5-5' fill='none' stroke='%2354585A' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:38px}
+input:focus-visible,select:focus-visible,textarea:focus-visible{outline:none;border-color:var(--navy);box-shadow:0 0 0 4px rgba(27,57,106,.18)}
+.invalid input,.invalid select{border-color:var(--orange);background:#FFF9FA}
 .hint{margin:6px 0 0;font-size:13px;color:var(--slate)}
 .err{margin:6px 0 0;font-size:13px;font-weight:600;color:var(--orange-700)}
 .err:empty{display:none}
@@ -72,25 +72,25 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline:none;bor
 .chip input{position:absolute;opacity:0;inset:0;width:100%;height:100%;margin:0;cursor:pointer}
 .chip span{display:inline-flex;align-items:center;min-height:46px;padding:0 16px;border-radius:999px;border:1.5px solid #BFCAD6;background:#fff;font-weight:600;font-size:15px}
 .chip input:checked+span{background:var(--navy);border-color:var(--navy);color:#fff}
-.chip input:focus-visible+span{box-shadow:0 0 0 4px rgba(42,140,134,.3)}
+.chip input:focus-visible+span{box-shadow:0 0 0 4px rgba(179,142,93,.35)}
 .invalid .chip span{border-color:var(--orange)}
 .row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 details.mas{margin:0 0 14px;background:var(--mist);border-radius:14px;padding:4px 14px}
-details.mas summary{cursor:pointer;min-height:48px;display:flex;align-items:center;font-weight:600;font-size:14px;color:var(--teal-600);list-style:none}
+details.mas summary{cursor:pointer;min-height:48px;display:flex;align-items:center;font-weight:600;font-size:14px;color:var(--navy);list-style:none}
 details.mas summary::-webkit-details-marker{display:none}
 details.mas[open]{padding-bottom:12px}
 .check{display:flex;gap:12px;align-items:flex-start;font-weight:500;cursor:pointer}
-.check input{width:26px;height:26px;margin:1px 0 0;accent-color:var(--teal-600);flex:none}
-.link{background:none;border:0;padding:0;color:var(--teal-600);font-weight:700;text-decoration:underline;cursor:pointer;font-size:inherit}
+.check input{width:26px;height:26px;margin:1px 0 0;accent-color:var(--navy);flex:none}
+.link{background:none;border:0;padding:0;color:var(--navy);font-weight:700;text-decoration:underline;cursor:pointer;font-size:inherit}
 
 /* Botones */
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:52px;padding:0 20px;border:1.5px solid transparent;border-radius:14px;font-weight:700;font-size:16px;cursor:pointer;text-decoration:none}
 .btn:active{transform:translateY(1px)}
-.btn:focus-visible{outline:3px solid rgba(42,140,134,.45);outline-offset:2px}
+.btn:focus-visible{outline:3px solid rgba(179,142,93,.55);outline-offset:2px}
 .btn-primary{background:var(--navy);color:#fff}
 .btn-accent{background:var(--teal-600);color:#fff}
 .btn-ghost{background:#fff;border-color:#BFCAD6;color:var(--navy)}
-.btn-danger{background:#fff;border-color:#E3B4B4;color:var(--red-700)}
+.btn-danger{background:#fff;border-color:#E2B4BF;color:var(--red-700)}
 .btn-lg{min-height:58px;font-size:17px}
 .btn-sm{min-height:44px;padding:0 14px;font-size:14px}
 .btn-block{width:100%}
@@ -105,14 +105,14 @@ details.mas[open]{padding-bottom:12px}
 .sel button[aria-current=true]{background:var(--navy);border-color:var(--navy);color:#fff}
 
 /* Pase */
-.pase{position:relative;background:#fff;border-radius:24px;overflow:hidden;box-shadow:0 2px 4px rgba(18,38,74,.08),0 18px 40px rgba(18,38,74,.16);border:1px solid var(--line);margin-bottom:14px}
-.pase-head{background:var(--navy);color:#fff;padding:14px 16px;display:flex;align-items:center;gap:12px;background-image:linear-gradient(135deg,rgba(42,140,134,.35),transparent 60%)}
-.pase-head img{border-radius:9px}
+.pase{position:relative;background:#fff;border-radius:24px;overflow:hidden;box-shadow:0 2px 4px rgba(27,57,106,.08),0 18px 40px rgba(27,57,106,.16);border:1px solid var(--line);margin-bottom:14px}
+.pase-head{background:var(--navy);color:#fff;padding:14px 16px;display:flex;align-items:center;gap:12px;border-bottom:3px solid var(--teal);background-image:linear-gradient(135deg,rgba(179,142,93,.28),transparent 65%)}
+.pase-head svg{flex:none;border-radius:8px}
 .pase-head strong{display:block;font-size:17px;font-weight:800;line-height:1.1}
-.pase-head small{color:#9AD6D1;font-size:12px}
+.pase-head small{color:#E6D3B5;font-size:12px;font-weight:600}
 .st{margin-left:auto;display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:999px;font-size:12px;font-weight:700;white-space:nowrap;background:var(--mist)}
 .st::before{content:"";width:8px;height:8px;border-radius:50%;background:currentColor}
-.st-pend{background:var(--teal-50);color:#17625D}.st-dentro{background:#E2ECFB;color:#1B4DA0}
+.st-pend{background:var(--teal-50);color:#7D5D32}.st-dentro{background:#E3ECF9;color:#1B396A}
 .st-cerrada{background:#EAEEF3;color:var(--slate)}.st-venc{background:var(--orange-50);color:var(--orange-700)}
 .qr-box{position:relative;padding:20px 20px 4px;display:grid;place-items:center}
 .qr-box canvas{width:100%;max-width:280px;height:auto;aspect-ratio:1;border-radius:6px;image-rendering:pixelated}
@@ -133,10 +133,10 @@ details.mas[open]{padding-bottom:12px}
 
 /* Caseta */
 .scanner{position:relative;aspect-ratio:1;width:100%;border-radius:16px;overflow:hidden;background:var(--navy);display:grid;place-items:center;margin-bottom:12px;
-  background-image:linear-gradient(135deg,rgba(42,140,134,.25),transparent 60%)}
+  background-image:linear-gradient(135deg,rgba(179,142,93,.25),transparent 60%)}
 .scanner video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:none}
 .scanner.live video{display:block}
-.scan-idle{text-align:center;color:#C9D5E8;padding:0 24px}.scan-idle svg{margin:0 auto 8px;width:46px;height:46px}
+.scan-idle{text-align:center;color:#E2E8F0;padding:0 24px}.scan-idle svg{margin:0 auto 8px;width:46px;height:46px}
 .scanner.live .scan-idle{display:none}
 .marco{position:absolute;inset:14%;pointer-events:none}
 .marco i{position:absolute;width:34px;height:34px;border:4px solid #fff}
@@ -144,19 +144,19 @@ details.mas[open]{padding-bottom:12px}
 .marco i:nth-child(2){right:0;top:0;border-left:0;border-bottom:0;border-radius:0 10px 0 0}
 .marco i:nth-child(3){left:0;bottom:0;border-right:0;border-top:0;border-radius:0 0 0 10px}
 .marco i:nth-child(4){right:0;bottom:0;border-left:0;border-top:0;border-radius:0 0 10px 0}
-.scanner.live .marco i{border-color:#6FD3CC}
+.scanner.live .marco i{border-color:#E6D3B5}
 .result{border-radius:var(--radius);padding:20px;background:#fff;border:1px solid var(--line);box-shadow:var(--shadow);margin-bottom:16px}
 .result.vacio{text-align:center;color:var(--slate);border-style:dashed;box-shadow:none;background:transparent}
 .result.vacio h2{color:var(--navy);margin:8px 0 2px}.result.vacio svg{margin:0 auto;width:40px;height:40px}
-.result.ok{border-top:6px solid var(--teal)}.result.bad{border-top:6px solid var(--orange)}
+.result.ok{border-top:6px solid #1E7E5A}.result.bad{border-top:6px solid var(--orange)}
 .r-head{display:flex;align-items:center;gap:14px;margin-bottom:12px}
 .sello{width:58px;height:58px;border-radius:18px;display:grid;place-items:center;color:#fff;flex:none}
-.sello svg{width:32px;height:32px}.ok .sello{background:var(--teal-600)}.bad .sello{background:var(--orange-700)}
+.sello svg{width:32px;height:32px}.ok .sello{background:#1E7E5A}.bad .sello{background:var(--orange-700)}
 .r-head h2{font-size:26px;font-weight:800;line-height:1.1}.r-head p{margin:2px 0 0;color:var(--slate);font-size:14px}
-.motivo-mal{margin:0 0 12px;padding:12px 14px;border-radius:12px;background:var(--orange-50);color:#6E3408;font-weight:600}
+.motivo-mal{margin:0 0 12px;padding:12px 14px;border-radius:12px;background:var(--orange-50);color:#610018;font-weight:600}
 .r-nombre{margin:0 0 8px;font-size:24px;font-weight:800;line-height:1.2;word-break:break-word}
 .result .datos{margin-bottom:14px;padding:12px;background:var(--mist);border-radius:12px}
-.id-aviso{display:flex;gap:10px;margin:0 0 12px;padding:12px 14px;border-radius:12px;background:var(--teal-50);color:#124F4B;font-size:14px;font-weight:600}
+.id-aviso{display:flex;gap:10px;margin:0 0 12px;padding:12px 14px;border-radius:12px;background:var(--teal-50);color:#5E4422;font-size:14px;font-weight:600}
 .id-aviso svg{margin-top:2px}
 
 /* Registro */
@@ -164,8 +164,8 @@ details.mas[open]{padding-bottom:12px}
 .stat{background:#fff;border:1px solid var(--line);border-radius:16px;padding:12px 12px;box-shadow:var(--shadow)}
 .stat b{display:block;font-size:30px;font-weight:800;line-height:1;font-variant-numeric:tabular-nums}
 .stat span{display:block;margin-top:4px;color:var(--slate);font-size:12px;font-weight:600}
-.stat.dentro{background:var(--navy);color:#fff;border-color:var(--navy)}.stat.dentro span{color:#9AD6D1}
-.alerta{margin-bottom:14px;padding:14px 16px;border-radius:14px;background:var(--orange-50);border:1px solid #F0C9A8;border-left:6px solid var(--orange);color:#6E3408;font-weight:600}
+.stat.dentro{background:var(--navy);color:#fff;border-color:var(--navy)}.stat.dentro span{color:#E6D3B5}
+.alerta{margin-bottom:14px;padding:14px 16px;border-radius:14px;background:var(--orange-50);border:1px solid #E5B9C4;border-left:6px solid var(--orange);color:#610018;font-weight:600}
 .lista{display:grid;gap:10px}
 .item{display:flex;align-items:center;gap:12px;padding:12px 14px;background:var(--mist);border-radius:14px;flex-wrap:wrap}
 .item-main{flex:1;min-width:170px}.item-main strong{display:block}
@@ -185,18 +185,18 @@ details.mas[open]{padding-bottom:12px}
 
 /* Barra inferior, diálogos, aviso */
 .bar{position:fixed;left:0;right:0;bottom:0;z-index:30;background:#fff;border-top:1px solid var(--line);display:flex;justify-content:space-around;gap:4px;
-  padding:6px 8px calc(6px + env(safe-area-inset-bottom));box-shadow:0 -6px 20px rgba(18,38,74,.08)}
+  padding:6px 8px calc(6px + env(safe-area-inset-bottom));box-shadow:0 -6px 20px rgba(27,57,106,.08)}
 .bar button{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;min-height:56px;border:0;border-radius:14px;background:none;color:var(--slate);font-size:12px;font-weight:700;cursor:pointer;position:relative}
-.bar button[aria-current=page]{background:var(--teal-50);color:var(--navy)}
+.bar button[aria-current=page]{background:var(--teal-50);color:var(--navy);box-shadow:inset 0 0 0 1.5px rgba(179,142,93,.45)}
 .badge{position:absolute;top:4px;right:calc(50% - 30px);min-width:20px;height:20px;border-radius:10px;background:var(--orange);color:#fff;font-size:11px;font-weight:700;display:grid;place-items:center;padding:0 5px}
-.dlg{border:0;border-radius:var(--radius);padding:22px;width:calc(100% - 24px);max-width:520px;box-shadow:0 20px 60px rgba(18,38,74,.35);max-height:92vh}
-.dlg::backdrop{background:rgba(18,38,74,.55)}
+.dlg{border:0;border-radius:var(--radius);padding:22px;width:calc(100% - 24px);max-width:520px;box-shadow:0 20px 60px rgba(27,57,106,.35);max-height:92vh}
+.dlg::backdrop{background:rgba(27,57,106,.55)}
 .dlg h2{margin-bottom:8px}.dlg p{color:var(--slate);margin:0 0 12px}
 .dlg ol{padding-left:20px;margin:0 0 14px}.dlg li{margin-bottom:10px}
 .dlg code,.dlg pre{font-family:ui-monospace,Menlo,monospace;font-size:12px}
 .dlg textarea{font-family:ui-monospace,Menlo,monospace;font-size:12px;min-height:150px}
 .toast{position:fixed;left:50%;bottom:calc(96px + env(safe-area-inset-bottom));transform:translate(-50%,16px);opacity:0;pointer-events:none;z-index:60;background:var(--navy);color:#fff;
-  padding:12px 20px;border-radius:12px;font-weight:600;font-size:14px;max-width:calc(100% - 32px);text-align:center;box-shadow:0 10px 30px rgba(18,38,74,.35);transition:all .25s}
+  padding:12px 20px;border-radius:12px;font-weight:600;font-size:14px;max-width:calc(100% - 32px);text-align:center;box-shadow:0 10px 30px rgba(27,57,106,.35);transition:all .25s}
 .toast.on{opacity:1;transform:translate(-50%,0)}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
@@ -239,8 +239,25 @@ window.ACCESOQR = {
 
 <header class="top">
   <div class="wrap">
-    <svg width="40" height="40" viewBox="0 0 100 100" aria-hidden="true" style="border-radius:10px"><rect width="100" height="100" rx="22" fill="#fff"/><g fill="none" stroke="#12264A" stroke-width="6"><rect x="17" y="17" width="26" height="26" rx="3"/><rect x="57" y="17" width="26" height="26" rx="3"/><rect x="17" y="57" width="26" height="26" rx="3"/></g><g fill="#12264A"><rect x="26" y="26" width="8" height="8"/><rect x="66" y="26" width="8" height="8"/><rect x="26" y="66" width="8" height="8"/><rect x="47" y="26" width="6" height="6"/><rect x="47" y="38" width="6" height="6"/><rect x="17" y="47" width="6" height="6"/><rect x="29" y="47" width="6" height="6"/></g><path d="M56 71L66 81L85 58" fill="none" stroke="#2A8C86" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    <div><strong>AccesoQR</strong><small>Cada visita registrada, cada puerta bajo control.</small></div>
+    <!-- Logotipo Institucional TecNM · Campus Matehuala -->
+    <svg class="logo-tec" width="46" height="46" viewBox="0 0 120 120" role="img" aria-label="Logotipo TecNM Campus Matehuala">
+      <rect width="120" height="120" rx="18" fill="#ffffff"/>
+      <rect x="4" y="4" width="112" height="112" rx="14" fill="none" stroke="#B38E5D" stroke-width="2.5"/>
+      <!-- Emblema engrane y antorcha tecnológica -->
+      <circle cx="60" cy="40" r="19" fill="none" stroke="#1B396A" stroke-width="4" stroke-dasharray="6 3.5"/>
+      <circle cx="60" cy="40" r="12" fill="#1B396A"/>
+      <path d="M60 29 C56 35, 57 42, 60 46 C63 42, 64 35, 60 29 Z" fill="#B38E5D"/>
+      <path d="M44 48 Q60 56 76 48" fill="none" stroke="#B38E5D" stroke-width="3" stroke-linecap="round"/>
+      <!-- Siglas TecNM -->
+      <text x="60" y="79" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-weight="800" font-size="23" fill="#1B396A" letter-spacing="-0.5">TecNM</text>
+      <!-- Franja Campus Matehuala -->
+      <rect x="14" y="87" width="92" height="19" rx="5" fill="#1B396A"/>
+      <text x="60" y="100" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-weight="700" font-size="11.5" fill="#E6D3B5" letter-spacing="0.8">MATEHUALA</text>
+    </svg>
+    <div>
+      <strong>AccesoQR</strong>
+      <small>TecNM · Campus Matehuala</small>
+    </div>
     <button class="modo" id="modo" type="button">Conectando…</button>
   </div>
 </header>
@@ -1692,6 +1709,15 @@ var Q=__req('index');Q.ErrorCorrectLevel=__req('QRErrorCorrectLevel');global.QRC
     s.innerHTML = ICONS[n];
     return s;
   };
+  function logoTecNM(size = 38) {
+    const s = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    s.setAttribute("viewBox", "0 0 120 120");
+    s.setAttribute("width", size);
+    s.setAttribute("height", size);
+    s.setAttribute("aria-hidden", "true");
+    s.innerHTML = '<rect width="120" height="120" rx="18" fill="#ffffff"/><rect x="4" y="4" width="112" height="112" rx="14" fill="none" stroke="#B38E5D" stroke-width="2.5"/><circle cx="60" cy="40" r="19" fill="none" stroke="#1B396A" stroke-width="4" stroke-dasharray="6 3.5"/><circle cx="60" cy="40" r="12" fill="#1B396A"/><path d="M60 29 C56 35, 57 42, 60 46 C63 42, 64 35, 60 29 Z" fill="#B38E5D"/><path d="M44 48 Q60 56 76 48" fill="none" stroke="#B38E5D" stroke-width="3" stroke-linecap="round"/><text x="60" y="79" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-weight="800" font-size="23" fill="#1B396A" letter-spacing="-0.5">TecNM</text><rect x="14" y="87" width="92" height="19" rx="5" fill="#1B396A"/><text x="60" y="100" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-weight="700" font-size="11.5" fill="#E6D3B5" letter-spacing="0.8">MATEHUALA</text>';
+    return s;
+  }
   const todayStr = (d = new Date()) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
   const hhmm = (iso) => {
     const d = new Date(iso);
@@ -2162,7 +2188,7 @@ service cloud.firestore {
     }
     throw new Error("QR muy grande");
   }
-  function qrCanvas(text, color = "#12264A") {
+  function qrCanvas(text, color = "#1B396A") {
     const q = makeQR(text);
     const n = q.getModuleCount();
     const total = n + 8;
@@ -2220,13 +2246,13 @@ service cloud.firestore {
       box._w = AQSeg.ventanaActual();
       box.append(c);
     } else {
-      box.append(qrCanvas("AccesoQR · completa tus datos", "#5A6472"), el("div", { class: "candado" }, icon("lock", 30), bloqueo || "Tu QR aparece aquí cuando generes el pase"));
+      box.append(qrCanvas("AccesoQR · completa tus datos", "#54585A"), el("div", { class: "candado" }, icon("lock", 30), bloqueo || "Tu QR aparece aquí cuando generes el pase"));
     }
     const dato = (k, v) => [el("dt", { text: k }), el("dd", { text: v || "—" })];
     return el(
       "article",
       { class: "pase" },
-      el("div", { class: "pase-head" }, el("div", {}, el("strong", { text: "Pase de visita" }), el("small", { text: CFG.institucion })), est && el("span", { class: "st st-" + est, text: ETQ[est] })),
+      el("div", { class: "pase-head" }, logoTecNM(40), el("div", {}, el("strong", { text: "Pase de visita" }), el("small", { text: CFG.institucion })), est && el("span", { class: "st st-" + est, text: ETQ[est] })),
       el("div", {}, box, vivo && el("div", { class: "barra" }, el("i")), vivo && el("p", { class: "barra-txt", text: "" })),
       el("div", { class: "corte" }),
       el(
@@ -2451,7 +2477,7 @@ service cloud.firestore {
           if (f.tagName === "DETAILS") f.open = true;
           f.scrollIntoView({ behavior: "smooth", block: "center" });
         }
-        toast("Revisa lo marcado en naranja.");
+        toast("Revisa lo marcado en guinda.");
         return;
       }
       const btn = $("#guardar", form);
@@ -2788,7 +2814,7 @@ service cloud.firestore {
     const q = (s) => '"' + String(s == null ? "" : s).replace(/"/g, '""') + '"';
     const csv = [["Fecha", "Visitante", "Área", "Motivo", "Tipo", "Entrada", "Salida", "Estado"].map(q).join(","),
       ...rows.map((x) => [fechaDe(x), x.nombre, x.area, x.motivo, x.tipo || "", x.entrada ? hhmm(x.entrada) : "", x.salida ? hhmm(x.salida) : "", ESTADO_V[x.estado] || x.estado].map(q).join(","))].join("\r\n");
-    const a = el("a", { href: URL.createObjectURL(new Blob(["﻿" + csv], { type: "text/csv;charset=utf-8" })), download: `accesoqr_${mes}.csv` });
+    const a = el("a", { href: URL.createObjectURL(new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8" })), download: `accesoqr_${mes}.csv` });
     document.body.append(a);
     a.click();
     a.remove();
