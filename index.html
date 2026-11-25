@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>AccesoQR · Pase de visita · TecNM Matehuala</title>
-  <meta name="description" content="Control de acceso con validación de CURP, identificación, horario laboral, hora de salida y liberación de pase · TecNM Campus Matehuala.">
+  <meta name="description" content="Control de acceso con validación de CURP, identificación, horario laboral, hora de salida, liberación de pase y conteo diario · TecNM Campus Matehuala.">
   <meta name="theme-color" content="#1B396A">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -22,7 +22,8 @@
     body{margin:0;background:var(--mist);color:#0F172A;min-height:100vh;display:flex;flex-direction:column}
     header{background:var(--navy);color:#fff;padding:14px 18px;border-bottom:3px solid var(--teal);display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
     .brand{display:flex;align-items:center;gap:12px}
-    .logo-badge{width:42px;height:42px;border-radius:10px;background:#fff;color:var(--navy);display:grid;place-items:center;font-weight:800;font-size:12px;text-align:center;line-height:1.05;border:2px solid var(--teal)}
+    .logo-img-box{width:48px;height:48px;border-radius:12px;background:#fff;padding:3px;display:grid;place-items:center;border:2px solid var(--teal);flex-shrink:0}
+    .logo-img-box svg{width:100%;height:100%;display:block}
     .brand h1{margin:0;font-size:18px;font-weight:800;letter-spacing:-.01em}
     .brand small{display:block;color:#E6D3B5;font-size:12px;font-weight:600}
     .status-pill{display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22);padding:6px 12px;border-radius:999px;font-size:12px;font-weight:700}
@@ -33,7 +34,7 @@
     .tab-btn{border:none;background:none;padding:13px 18px;font-size:14px;font-weight:700;color:var(--slate);cursor:pointer;border-bottom:3px solid transparent;transition:.15s}
     .tab-btn.active{color:var(--navy);border-bottom-color:var(--navy)}
 
-    main{width:100%;max-width:540px;margin:20px auto;padding:0 14px 40px;flex:1}
+    main{width:100%;max-width:560px;margin:20px auto;padding:0 14px 44px;flex:1}
     .card{background:#fff;border-radius:20px;padding:20px;box-shadow:0 8px 28px rgba(27,57,106,.08);border:1px solid var(--line)}
     .hidden{display:none!important}
 
@@ -43,8 +44,8 @@
     label.field-lbl{display:block;font-size:13px;font-weight:700;color:var(--navy);margin:14px 0 6px}
     label.field-lbl:first-child{margin-top:0}
     .req{color:var(--orange)}
-    input[type="text"],input[type="time"],select{width:100%;padding:12px 14px;border:1.5px solid var(--line);border-radius:12px;font-size:15px;color:#0F172A;background:#fff;transition:.15s}
-    input[type="text"]:focus,input[type="time"]:focus,select:focus{outline:none;border-color:var(--navy);box-shadow:0 0 0 3px rgba(27,57,106,.12)}
+    input[type="text"],input[type="time"],input[type="date"],select{width:100%;padding:12px 14px;border:1.5px solid var(--line);border-radius:12px;font-size:15px;color:#0F172A;background:#fff;transition:.15s}
+    input[type="text"]:focus,input[type="time"]:focus,input[type="date"]:focus,select:focus{outline:none;border-color:var(--navy);box-shadow:0 0 0 3px rgba(27,57,106,.12)}
     input.uppercase{text-transform:uppercase;letter-spacing:.04em;font-weight:600}
     .hint{font-size:12px;color:var(--slate);margin-top:4px;display:block}
     .val-msg{font-size:12px;font-weight:700;margin-top:5px;display:flex;align-items:center;gap:5px}
@@ -103,16 +104,90 @@
     .scan-result.err{border-color:var(--red);background:var(--red-bg)}
     .scan-result.warn{border-color:var(--amber);background:var(--amber-bg)}
     .salida-box{margin-top:12px;padding:12px;background:#fff;border-radius:12px;border:1px solid var(--line)}
+
+    /* Apartado Conteo Diario de Personas y Pases */
+    .daily-card{margin-top:18px;background:#fff;border-radius:20px;padding:18px 20px;box-shadow:0 8px 28px rgba(27,57,106,.07);border:1px solid var(--line)}
+    .daily-top{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+    .daily-top h3{margin:0;font-size:16px;font-weight:800;color:var(--navy)}
+    .daily-date-row{display:flex;align-items:center;gap:8px}
+    .daily-date-row input[type="date"]{width:auto;padding:7px 10px;font-size:13px;border-radius:10px}
+    .kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px}
+    @media (max-width:480px){.kpi-grid{grid-template-columns:repeat(2,1fr)}}
+    .kpi{background:var(--mist);border:1px solid var(--line);border-radius:12px;padding:10px;text-align:center}
+    .kpi strong{display:block;font-size:20px;font-weight:800;color:var(--navy)}
+    .kpi span{font-size:11px;font-weight:700;color:var(--slate)}
+    .kpi.green strong{color:var(--green)}
+    .kpi.amber strong{color:var(--amber)}
+    .daily-list{display:flex;flex-direction:column;gap:8px;max-height:260px;overflow-y:auto}
+    .daily-item{border:1px solid var(--line);border-radius:12px;padding:10px 12px;background:#FAFBFD;font-size:13px;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+    .daily-item strong{color:var(--navy);display:block;font-size:13px}
+    .daily-item small{color:var(--slate);font-size:12px}
+    .pill-mini{padding:3px 9px;border-radius:999px;font-size:11px;font-weight:800}
+    .pill-mini.pendiente{background:var(--teal-50);color:var(--teal-600)}
+    .pill-mini.dentro{background:var(--green-bg);color:var(--green)}
+    .pill-mini.liberado{background:#E2E8F0;color:#334155}
   </style>
 </head>
 <body>
 
+<!-- Definición reutilizable del emblema IT MH -->
+<svg width="0" height="0" style="position:absolute;visibility:hidden" aria-hidden="true">
+  <defs>
+    <g id="logo-itmh-emblem">
+      <!-- Engranaje exterior gris -->
+      <path fill="#D1D5DB" stroke="#111827" stroke-width="2.2" stroke-linejoin="round"
+        d="M44 6 L56 6 L60 15 A38 38 0 0 1 72 20 L80 14 L89 23 L83 31 A38 38 0 0 1 88 43 L97 47 L97 59 L88 63 A38 38 0 0 1 83 75 L89 83 L80 92 L72 86 A38 38 0 0 1 60 91 L56 100 L44 100 L40 91 A38 38 0 0 1 28 86 L20 92 L11 83 L17 75 A38 38 0 0 1 12 63 L3 59 L3 47 L12 43 A38 38 0 0 1 17 31 L11 23 L20 14 L28 20 A38 38 0 0 1 40 15 Z"/>
+      <!-- Círculo azul principal -->
+      <circle cx="50" cy="53" r="34" fill="#0A1BFF" stroke="#111827" stroke-width="2"/>
+      <!-- Arco lateral gris claro -->
+      <path fill="#E5E7EB" stroke="#111827" stroke-width="2.2"
+        d="M58 19 A34 34 0 0 1 58 87 L52 87 A28 28 0 0 0 52 19 Z"/>
+      <!-- Ventana blanca interior -->
+      <path fill="#FFFFFF" stroke="#0A1BFF" stroke-width="1.8"
+        d="M34 27 L64 27 L64 46 L73 53 L73 72 L27 72 L27 53 L34 46 Z"/>
+      <!-- Destello amarillo -->
+      <path fill="#FACC15" stroke="#111827" stroke-width="1.2"
+        d="M31 18 L34 25 L41 22 L36 28 L43 32 L35 33 L38 40 L32 35 L27 41 L28 33 L21 31 L28 28 L25 21 L31 25 Z"/>
+      <!-- Nopal verde -->
+      <g fill="#2D6A1E" stroke="#111827" stroke-width="1.4">
+        <rect x="42" y="54" width="6" height="15" rx="2"/>
+        <ellipse cx="40" cy="48" rx="5.5" ry="7.5" transform="rotate(-12 40 48)"/>
+        <ellipse cx="49" cy="47" rx="5" ry="6.5" transform="rotate(14 49 47)"/>
+        <ellipse cx="36" cy="39" rx="3.5" ry="4.5"/>
+        <ellipse cx="43" cy="38" rx="3.8" ry="4.8"/>
+      </g>
+      <!-- Texto TEC con líneas horizontales -->
+      <text x="54" y="42" font-family="Arial Black, Impact, sans-serif" font-size="14" font-weight="900" fill="#111827" letter-spacing="0.5">TEC</text>
+      <g stroke="#FFFFFF" stroke-width="1.2">
+        <line x1="53" y1="32" x2="66" y2="32"/>
+        <line x1="53" y1="35.5" x2="66" y2="35.5"/>
+        <line x1="53" y1="39" x2="66" y2="39"/>
+      </g>
+      <!-- Siglas I T MH -->
+      <text x="51" y="61" font-family="Arial, sans-serif" font-size="8.2" font-weight="800" fill="#111827">I T MH</text>
+      <!-- Base gris -->
+      <rect x="27" y="68" width="46" height="10" fill="#D1D5DB" stroke="#111827" stroke-width="1.4"/>
+      <!-- Franjas azules inferiores -->
+      <g fill="#0A1BFF">
+        <rect x="23" y="80" width="54" height="2.2" rx="1"/>
+        <rect x="25" y="84" width="50" height="2.2" rx="1"/>
+        <rect x="28" y="88" width="44" height="2.2" rx="1"/>
+        <rect x="32" y="92" width="36" height="2.2" rx="1"/>
+      </g>
+    </g>
+  </defs>
+</svg>
+
 <header>
   <div class="brand">
-    <div class="logo-badge">TecNM<br>MATEHUALA</div>
+    <div class="logo-img-box" title="Logo IT MH · TecNM Campus Matehuala">
+      <svg viewBox="0 0 100 104" role="img" aria-label="Logo IT MH">
+        <use href="#logo-itmh-emblem"></use>
+      </svg>
+    </div>
     <div>
       <h1>AccesoQR</h1>
-      <small>TecNM · Campus Matehuala</small>
+      <small>TecNM · Campus Matehuala (IT MH)</small>
     </div>
   </div>
   <div class="status-pill" id="cloud-status">
@@ -192,7 +267,11 @@
   <section id="view-pase" class="hidden">
     <div class="pase">
       <div class="pase-head">
-        <div class="logo-badge" style="width:36px;height:36px;font-size:10px;">TecNM<br>MAT</div>
+        <div class="logo-img-box" style="width:40px;height:40px;">
+          <svg viewBox="0 0 100 104" role="img" aria-label="Logo IT MH">
+            <use href="#logo-itmh-emblem"></use>
+          </svg>
+        </div>
         <div>
           <strong style="display:block;font-size:16px;">Pase de visita</strong>
           <small style="color:#E6D3B5;font-size:12px;">TecNM · Campus Matehuala</small>
@@ -249,6 +328,40 @@
 
     <div id="scan-output" class="hidden"></div>
   </section>
+
+  <!-- APARTADO: CONTEO DE PERSONAS / PASES EN UN DÍA -->
+  <section class="daily-card" id="daily-summary-section">
+    <div class="daily-top">
+      <h3>📊 Personas y Pases del Día</h3>
+      <div class="daily-date-row">
+        <input type="date" id="fecha-resumen" onchange="renderDailySummary()">
+        <button type="button" class="btn-sec" style="flex:0 0 auto;padding:7px 11px;" onclick="cargarPasesDesdeNube()">↻ Actualizar</button>
+      </div>
+    </div>
+
+    <div class="kpi-grid">
+      <div class="kpi">
+        <strong id="kpi-total">0</strong>
+        <span>Pases / Personas</span>
+      </div>
+      <div class="kpi green">
+        <strong id="kpi-dentro">0</strong>
+        <span>Dentro</span>
+      </div>
+      <div class="kpi amber">
+        <strong id="kpi-pendientes">0</strong>
+        <span>Pendientes</span>
+      </div>
+      <div class="kpi">
+        <strong id="kpi-liberados">0</strong>
+        <span>Liberados</span>
+      </div>
+    </div>
+
+    <div class="daily-list" id="daily-list">
+      <small style="color:var(--slate);">Sin registros para esta fecha.</small>
+    </div>
+  </section>
 </main>
 
 <!-- Firebase SDKs (Compat) -->
@@ -289,22 +402,13 @@ let idStream = null;
 let currentPase = null;
 let qrInterval = null;
 let html5QrScanner = null;
-
-(async function initFirebase() {
-  try {
-    firebase.initializeApp(window.ACCESOQR.firebase);
-    db = firebase.firestore();
-    await firebase.auth().signInAnonymously();
-    authReady = true;
-    document.getElementById("status-dot").classList.remove("offline");
-    document.getElementById("status-text").textContent = "En línea · Nube";
-  } catch (e) {
-    console.error("Error Firebase:", e);
-    document.getElementById("status-text").textContent = "Modo local (sin nube)";
-  }
-})();
+let pasesCache = [];
 
 function pad2(n) { return String(n).padStart(2, "0"); }
+
+function fechaHoyISO(d = new Date()) {
+  return `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`;
+}
 
 function horaActualHHMM() {
   const d = new Date();
@@ -316,9 +420,8 @@ function minutosDesdeMedianoche(hhmm) {
   return h * 60 + m;
 }
 
-// Validación de días (Lunes a Viernes) y horario (08:00 a 20:00 h)
 function validarDiaYHorario(fechaObj = new Date()) {
-  const diaSemana = fechaObj.getDay(); // 0 = Domingo, 6 = Sábado
+  const diaSemana = fechaObj.getDay();
   if (diaSemana === 0 || diaSemana === 6) {
     const diaNombre = diaSemana === 0 ? "domingo" : "sábado";
     return {
@@ -328,8 +431,8 @@ function validarDiaYHorario(fechaObj = new Date()) {
   }
 
   const minActual = fechaObj.getHours() * 60 + fechaObj.getMinutes();
-  const minApertura = minutosDesdeMedianoche(window.ACCESOQR.horaApertura); // 480 (08:00)
-  const minCierre = minutosDesdeMedianoche(window.ACCESOQR.horaCierre);     // 1200 (20:00)
+  const minApertura = minutosDesdeMedianoche(window.ACCESOQR.horaApertura);
+  const minCierre = minutosDesdeMedianoche(window.ACCESOQR.horaCierre);
 
   if (minActual < minApertura || minActual > minCierre) {
     return {
@@ -341,7 +444,105 @@ function validarDiaYHorario(fechaObj = new Date()) {
   return { ok: true, msg: "" };
 }
 
+(async function initFirebase() {
+  try {
+    firebase.initializeApp(window.ACCESOQR.firebase);
+    db = firebase.firestore();
+    await firebase.auth().signInAnonymously();
+    authReady = true;
+    document.getElementById("status-dot").classList.remove("offline");
+    document.getElementById("status-text").textContent = "En línea · Nube";
+    escucharPasesEnTiempoReal();
+  } catch (e) {
+    console.error("Error Firebase:", e);
+    document.getElementById("status-text").textContent = "Modo local (sin nube)";
+    cargarPasesLocales();
+  }
+})();
+
+function cargarPasesLocales() {
+  const items = [];
+  for (let i = 0; i < localStorage.length; i++) {
+    const k = localStorage.key(i);
+    if (k && k.startsWith("pase_")) {
+      try {
+        items.push(JSON.parse(localStorage.getItem(k)));
+      } catch {}
+    }
+  }
+  pasesCache = items;
+  renderDailySummary();
+}
+
+function escucharPasesEnTiempoReal() {
+  if (!db) return;
+  db.collection("pases").onSnapshot(snap => {
+    const lista = [];
+    snap.forEach(doc => lista.push(doc.data()));
+    pasesCache = lista;
+    renderDailySummary();
+  }, err => {
+    console.warn("Snapshot local fallback:", err);
+    cargarPasesLocales();
+  });
+}
+
+async function cargarPasesDesdeNube() {
+  if (db && authReady) {
+    try {
+      const snap = await db.collection("pases").get();
+      const lista = [];
+      snap.forEach(doc => lista.push(doc.data()));
+      pasesCache = lista;
+      renderDailySummary();
+      return;
+    } catch (e) {
+      console.error(e);
+    }
+  }
+  cargarPasesLocales();
+}
+
+function renderDailySummary() {
+  const fechaSel = document.getElementById("fecha-resumen").value || fechaHoyISO();
+  const delDia = pasesCache.filter(p => p.fecha === fechaSel);
+
+  const total = delDia.length;
+  const dentro = delDia.filter(p => p.estado === "dentro").length;
+  const pendientes = delDia.filter(p => p.estado === "pendiente").length;
+  const liberados = delDia.filter(p => p.estado === "liberado").length;
+
+  document.getElementById("kpi-total").textContent = total;
+  document.getElementById("kpi-dentro").textContent = dentro;
+  document.getElementById("kpi-pendientes").textContent = pendientes;
+  document.getElementById("kpi-liberados").textContent = liberados;
+
+  const listEl = document.getElementById("daily-list");
+  if (total === 0) {
+    listEl.innerHTML = `<small style="color:var(--slate);">No hay pases ni personas registradas en la fecha ${fechaSel}.</small>`;
+    return;
+  }
+
+  listEl.innerHTML = delDia.map(p => {
+    const est = p.estado || "pendiente";
+    const etiquetaEst = est === "dentro" ? "Dentro" : (est === "liberado" ? "Liberado" : "Pendiente");
+    const horasTxt = `Ent: ${p.horaEntrada || "—"} · Sal: ${p.horaSalida || "—"}`;
+    return `
+      <div class="daily-item">
+        <div>
+          <strong>${p.nombre}</strong>
+          <small>${p.area} · ${p.motivo} · ${horasTxt}</small>
+        </div>
+        <span class="pill-mini ${est}">${etiquetaEst}</span>
+      </div>
+    `;
+  }).join("");
+}
+
 (function initUI() {
+  document.getElementById("fecha-resumen").value = fechaHoyISO();
+  cargarPasesLocales();
+
   const motivosContainer = document.getElementById("motivos-list");
   window.ACCESOQR.motivos.forEach((m, idx) => {
     const btn = document.createElement("button");
@@ -364,7 +565,6 @@ function validarDiaYHorario(fechaObj = new Date()) {
     areaSelect.appendChild(opt);
   });
 
-  // Mostrar aviso si se entra en fin de semana o fuera de horario
   const chkHorario = validarDiaYHorario(new Date());
   const errBanner = document.getElementById("form-schedule-error");
   if (!chkHorario.ok) {
@@ -373,7 +573,6 @@ function validarDiaYHorario(fechaObj = new Date()) {
   }
 })();
 
-// Validación antifraude para nombre
 function validarNombreReal(nombre) {
   const limpio = nombre.trim().replace(/\s+/g, " ");
   const partes = limpio.split(" ").filter(p => p.length >= 2);
@@ -396,7 +595,6 @@ nombreInput.addEventListener("input", () => {
   nombreFeedback.textContent = res.msg;
 });
 
-// Validación oficial de CURP mexicana (RENAPO + fecha real + dígito verificador)
 function validarCURP(curp) {
   const re = /^([A-Z][AEIOUX][A-Z]{2})(\d{2})(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])([HM])(AS|B[CS]|C[CLMSH]|D[FG]|G[TR]|HG|JC|M[CNS]|N[ETL]|OC|PL|Q[TR]|S[PLR]|T[CSL]|VZ|YN|ZS)([B-DF-HJ-NP-TV-Z]{3})([A-Z\d])(\d)$/;
   const m = curp.match(re);
@@ -448,7 +646,6 @@ curpInput.addEventListener("input", () => {
   }
 });
 
-// Cámara y compresión de Identificación Oficial
 async function startIdCamera() {
   try {
     idStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" }, audio: false });
@@ -513,7 +710,6 @@ function clearIdPhoto() {
   document.getElementById("id-preview-wrap").classList.add("hidden");
 }
 
-// Generar pase y guardar en Firestore
 document.getElementById("form-pase").addEventListener("submit", async (e) => {
   e.preventDefault();
   const errBanner = document.getElementById("form-schedule-error");
@@ -567,7 +763,7 @@ document.getElementById("form-pase").addEventListener("submit", async (e) => {
   const minCierre = minutosDesdeMedianoche(window.ACCESOQR.horaCierre);
   const finCalc = new Date(ahora.getTime() + window.ACCESOQR.ventanaMinutos * 60000);
   const finMin = Math.min(finCalc.getHours() * 60 + finCalc.getMinutes(), minCierre);
-  const fechaISO = `${ahora.getFullYear()}-${pad2(ahora.getMonth() + 1)}-${pad2(ahora.getDate())}`;
+  const fechaISO = fechaHoyISO(ahora);
   const desde = `${pad2(ahora.getHours())}:${pad2(ahora.getMinutes())}`;
   const hasta = `${pad2(Math.floor(finMin / 60))}:${pad2(finMin % 60)}`;
   const folio = "TM-" + Math.random().toString(36).substring(2, 10).toUpperCase();
@@ -593,6 +789,7 @@ document.getElementById("form-pase").addEventListener("submit", async (e) => {
       await db.collection("pases").doc(folio).set(paseData);
     }
     localStorage.setItem("pase_" + folio, JSON.stringify(paseData));
+    cargarPasesLocales();
     mostrarPase(paseData);
   } catch (err) {
     console.error(err);
@@ -760,7 +957,6 @@ async function validarPorFolio(folio) {
       return;
     }
 
-    // Verificación de día y horario laboral al intentar ingresar
     if (pase.estado === "pendiente") {
       const chkHorario = validarDiaYHorario(new Date());
       if (!chkHorario.ok) {
@@ -774,7 +970,6 @@ async function validarPorFolio(folio) {
       }
     }
 
-    // Verificación antifraude de CURP y nombre al escanear
     const chkCurp = validarCURP(pase.curp || "");
     const chkNom = validarNombreReal(pase.nombre || "");
     if (!chkCurp.ok || !chkNom.ok || !pase.fotoId) {
@@ -789,7 +984,6 @@ async function validarPorFolio(folio) {
       return;
     }
 
-    // Si está pendiente -> registrar entrada automáticamente
     if (pase.estado === "pendiente") {
       const entradaHHMM = horaActualHHMM();
       pase.estado = "dentro";
@@ -812,6 +1006,7 @@ async function validarPorFolio(folio) {
         });
       }
       localStorage.setItem("pase_" + folio, JSON.stringify(pase));
+      cargarPasesLocales();
     }
 
     renderFichaCaseta(pase);
@@ -892,6 +1087,7 @@ async function liberarPase(folio) {
       });
     }
     localStorage.setItem("pase_" + folio, JSON.stringify(pase));
+    cargarPasesLocales();
     if (currentPase && currentPase.folio === folio) {
       currentPase = pase;
       actualizarVistaPase(pase);
