@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>AccesoQR · Pase de visita · TecNM Matehuala</title>
-  <meta name="description" content="Control de acceso con validación de CURP, identificación, hora de salida y liberación de pase · TecNM Campus Matehuala.">
+  <meta name="description" content="Control de acceso con validación de CURP, identificación, horario laboral, hora de salida y liberación de pase · TecNM Campus Matehuala.">
   <meta name="theme-color" content="#1B396A">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -36,6 +36,9 @@
     main{width:100%;max-width:540px;margin:20px auto;padding:0 14px 40px;flex:1}
     .card{background:#fff;border-radius:20px;padding:20px;box-shadow:0 8px 28px rgba(27,57,106,.08);border:1px solid var(--line)}
     .hidden{display:none!important}
+
+    .schedule-banner{background:var(--teal-50);border:1px solid var(--teal);color:var(--navy);padding:10px 14px;border-radius:12px;font-size:12px;font-weight:700;margin-bottom:14px}
+    .error-banner{background:var(--red-bg);border:1.5px solid var(--red);color:var(--red);padding:12px 14px;border-radius:12px;font-size:13px;font-weight:700;margin-bottom:14px}
 
     label.field-lbl{display:block;font-size:13px;font-weight:700;color:var(--navy);margin:14px 0 6px}
     label.field-lbl:first-child{margin-top:0}
@@ -126,6 +129,11 @@
 <main>
   <!-- VISTA 1: FORMULARIO VISITANTE -->
   <section id="view-form" class="card">
+    <div class="schedule-banner">
+      🕒 Horario de acceso: <strong>Lunes a Viernes de 08:00 a 20:00 h</strong>. Sábado y domingo no hay acceso.
+    </div>
+    <div id="form-schedule-error" class="error-banner hidden"></div>
+
     <form id="form-pase" novalidate>
       <label class="field-lbl" for="nombre">Nombre completo <span class="req">*</span></label>
       <input type="text" id="nombre" placeholder="Ej. María Fernanda López" required autocomplete="name">
@@ -258,6 +266,8 @@ window.ACCESOQR = {
     appId: "1:811418531401:web:c05693e300311e96beb198"
   },
   ventanaMinutos: 120,
+  horaApertura: "08:00",
+  horaCierre: "20:00",
   motivos: ["Proveedor", "Padre de familia", "Aspirante", "Invitado", "Otro"],
   areas: [
     "Dirección",
@@ -294,6 +304,43 @@ let html5QrScanner = null;
   }
 })();
 
+function pad2(n) { return String(n).padStart(2, "0"); }
+
+function horaActualHHMM() {
+  const d = new Date();
+  return `${pad2(d.getHours())}:${pad2(d.getMinutes())}`;
+}
+
+function minutosDesdeMedianoche(hhmm) {
+  const [h, m] = hhmm.split(":").map(Number);
+  return h * 60 + m;
+}
+
+// Validación de días (Lunes a Viernes) y horario (08:00 a 20:00 h)
+function validarDiaYHorario(fechaObj = new Date()) {
+  const diaSemana = fechaObj.getDay(); // 0 = Domingo, 6 = Sábado
+  if (diaSemana === 0 || diaSemana === 6) {
+    const diaNombre = diaSemana === 0 ? "domingo" : "sábado";
+    return {
+      ok: false,
+      msg: `Error: Hoy es ${diaNombre} y no hay acceso. El acceso solo está disponible de lunes a viernes de 08:00 a 20:00 h.`
+    };
+  }
+
+  const minActual = fechaObj.getHours() * 60 + fechaObj.getMinutes();
+  const minApertura = minutosDesdeMedianoche(window.ACCESOQR.horaApertura); // 480 (08:00)
+  const minCierre = minutosDesdeMedianoche(window.ACCESOQR.horaCierre);     // 1200 (20:00)
+
+  if (minActual < minApertura || minActual > minCierre) {
+    return {
+      ok: false,
+      msg: `Error: Fuera de horario (${horaActualHHMM()} h). El acceso es únicamente de 08:00 a 20:00 h (lunes a viernes).`
+    };
+  }
+
+  return { ok: true, msg: "" };
+}
+
 (function initUI() {
   const motivosContainer = document.getElementById("motivos-list");
   window.ACCESOQR.motivos.forEach((m, idx) => {
@@ -316,14 +363,15 @@ let html5QrScanner = null;
     opt.textContent = a;
     areaSelect.appendChild(opt);
   });
+
+  // Mostrar aviso si se entra en fin de semana o fuera de horario
+  const chkHorario = validarDiaYHorario(new Date());
+  const errBanner = document.getElementById("form-schedule-error");
+  if (!chkHorario.ok) {
+    errBanner.textContent = chkHorario.msg;
+    errBanner.classList.remove("hidden");
+  }
 })();
-
-function pad2(n) { return String(n).padStart(2, "0"); }
-
-function horaActualHHMM() {
-  const d = new Date();
-  return `${pad2(d.getHours())}:${pad2(d.getMinutes())}`;
-}
 
 // Validación antifraude para nombre
 function validarNombreReal(nombre) {
@@ -408,7 +456,7 @@ async function startIdCamera() {
     video.srcObject = idStream;
     document.getElementById("cam-wrap").classList.remove("hidden");
   } catch (err) {
-    alert("No se pudo acceder a la cámara. Puedes usar el botón 'Subir imagen'.");
+    alert("Error: No se pudo acceder a la cámara. Puedes usar el botón 'Subir imagen'.");
   }
 }
 
@@ -468,6 +516,18 @@ function clearIdPhoto() {
 // Generar pase y guardar en Firestore
 document.getElementById("form-pase").addEventListener("submit", async (e) => {
   e.preventDefault();
+  const errBanner = document.getElementById("form-schedule-error");
+  errBanner.classList.add("hidden");
+
+  const ahora = new Date();
+  const chkHorario = validarDiaYHorario(ahora);
+  if (!chkHorario.ok) {
+    errBanner.textContent = chkHorario.msg;
+    errBanner.classList.remove("hidden");
+    alert(chkHorario.msg);
+    return;
+  }
+
   const nombre = document.getElementById("nombre").value.trim().replace(/\s+/g, " ").toUpperCase();
   const curp = document.getElementById("curp").value.trim().toUpperCase();
   const area = document.getElementById("area").value;
@@ -475,28 +535,28 @@ document.getElementById("form-pase").addEventListener("submit", async (e) => {
 
   const chkNombre = validarNombreReal(nombre);
   if (!chkNombre.ok) {
-    alert(chkNombre.msg);
+    alert("Error: " + chkNombre.msg);
     nombreInput.focus();
     return;
   }
 
   const chkCurp = validarCURP(curp);
   if (!chkCurp.ok) {
-    alert("Bloqueo de registro: " + chkCurp.motivo);
+    alert("Error de validación de CURP: " + chkCurp.motivo);
     curpInput.focus();
     return;
   }
 
   if (!fotoIdBase64) {
-    alert("Debes tomar o subir una foto de tu identificación oficial (INE o credencial).");
+    alert("Error: Debes tomar o subir una foto de tu identificación oficial (INE o credencial).");
     return;
   }
   if (!area) {
-    alert("Selecciona el área de destino.");
+    alert("Error: Selecciona el área de destino.");
     return;
   }
   if (!privacidad) {
-    alert("Debes aceptar el aviso de privacidad.");
+    alert("Error: Debes aceptar el aviso de privacidad.");
     return;
   }
 
@@ -504,11 +564,12 @@ document.getElementById("form-pase").addEventListener("submit", async (e) => {
   btn.disabled = true;
   btn.textContent = "Guardando en la nube...";
 
-  const ahora = new Date();
-  const fin = new Date(ahora.getTime() + window.ACCESOQR.ventanaMinutos * 60000);
+  const minCierre = minutosDesdeMedianoche(window.ACCESOQR.horaCierre);
+  const finCalc = new Date(ahora.getTime() + window.ACCESOQR.ventanaMinutos * 60000);
+  const finMin = Math.min(finCalc.getHours() * 60 + finCalc.getMinutes(), minCierre);
   const fechaISO = `${ahora.getFullYear()}-${pad2(ahora.getMonth() + 1)}-${pad2(ahora.getDate())}`;
   const desde = `${pad2(ahora.getHours())}:${pad2(ahora.getMinutes())}`;
-  const hasta = `${pad2(fin.getHours())}:${pad2(fin.getMinutes())}`;
+  const hasta = `${pad2(Math.floor(finMin / 60))}:${pad2(finMin % 60)}`;
   const folio = "TM-" + Math.random().toString(36).substring(2, 10).toUpperCase();
 
   const paseData = {
@@ -663,7 +724,7 @@ function startScanner() {
       }
     },
     () => {}
-  ).catch(err => alert("No se pudo iniciar la cámara del escáner: " + err));
+  ).catch(err => alert("Error: No se pudo iniciar la cámara del escáner: " + err));
 }
 
 function stopScanner() {
@@ -695,8 +756,22 @@ async function validarPorFolio(folio) {
 
     if (!pase) {
       out.classList.add("err");
-      out.innerHTML = `<strong>✕ ALERTA: Pase no encontrado</strong><br>El folio <code>${folio}</code> no existe en el sistema. No permitir acceso.`;
+      out.innerHTML = `<strong>✕ ERROR: Pase no encontrado</strong><br>El folio <code>${folio}</code> no existe en el sistema. No permitir acceso.`;
       return;
+    }
+
+    // Verificación de día y horario laboral al intentar ingresar
+    if (pase.estado === "pendiente") {
+      const chkHorario = validarDiaYHorario(new Date());
+      if (!chkHorario.ok) {
+        out.classList.add("err");
+        out.innerHTML = `
+          <strong style="color:var(--red);font-size:16px;">✕ ACCESO DENEGADO POR DÍA U HORARIO</strong>
+          <p style="margin:8px 0 4px;"><strong>Folio:</strong> <code>${pase.folio}</code> · <strong>Visitante:</strong> ${pase.nombre}</p>
+          <p style="margin:6px 0 0;color:var(--red);font-weight:700;">${chkHorario.msg}</p>
+        `;
+        return;
+      }
     }
 
     // Verificación antifraude de CURP y nombre al escanear
@@ -705,7 +780,7 @@ async function validarPorFolio(folio) {
     if (!chkCurp.ok || !chkNom.ok || !pase.fotoId) {
       out.classList.add("err");
       out.innerHTML = `
-        <strong style="color:var(--red);font-size:16px;">✕ ACCESO BLOQUEADO · POSIBLE IRREGULARIDAD</strong>
+        <strong style="color:var(--red);font-size:16px;">✕ ERROR / ACCESO BLOQUEADO · POSIBLE IRREGULARIDAD</strong>
         <p style="margin:8px 0 4px;"><strong>Folio:</strong> <code>${pase.folio}</code></p>
         <p style="margin:4px 0;"><strong>Nombre:</strong> ${pase.nombre || "Sin nombre"}</p>
         <p style="margin:4px 0;"><strong>CURP:</strong> <code>${pase.curp || "Sin CURP"}</code></p>
