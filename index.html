@@ -1,1796 +1,665 @@
 <!doctype html>
 <html lang="es-MX">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>AccesoQR · Pase de visita · TecNM Matehuala</title>
-<meta name="description" content="Cada visita registrada, cada puerta bajo control.">
-<meta name="theme-color" content="#1B396A">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="AccesoQR">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%231B396A'/%3E%3Cg fill='none' stroke='%23fff' stroke-width='6'%3E%3Crect x='17' y='17' width='26' height='26' rx='3'/%3E%3Crect x='57' y='17' width='26' height='26' rx='3'/%3E%3Crect x='17' y='57' width='26' height='26' rx='3'/%3E%3C/g%3E%3Cpath d='M56 71L66 81L85 58' fill='none' stroke='%23B38E5D' stroke-width='9' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>AccesoQR · Pase de visita · TecNM Matehuala</title>
+  <meta name="description" content="Control de acceso con validación de CURP e Identificación Oficial · TecNM Campus Matehuala.">
+  <meta name="theme-color" content="#1B396A">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 
-<style>
-/* ===== AccesoQR · estilos (Paleta Institucional TecNM Campus Matehuala) ===== */
-:root{
-  --navy:#1B396A;--navy-700:#13294B;--teal:#B38E5D;--teal-600:#9A7646;--teal-50:#F7F2EA;
-  --orange:#800020;--orange-700:#610018;--orange-50:#F9ECEF;--slate:#54585A;--mist:#F4F6F9;--line:#D6DCE5;
-  --red-700:#800020;--radius:18px;--shadow:0 1px 2px rgba(27,57,106,.06),0 8px 24px rgba(27,57,106,.08);
-  --font:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;color-scheme:light;
-}
-*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html{-webkit-text-size-adjust:100%}
-body{margin:0;font-family:var(--font);font-size:16px;line-height:1.5;color:var(--navy);background:var(--mist);min-height:100vh;
-  padding-bottom:calc(84px + env(safe-area-inset-bottom))}
-svg{display:block}
-button,input,select,textarea{font:inherit;color:inherit}
-[hidden]{display:none!important}
-.ico{width:22px;height:22px;flex:none}
-.wrap{max-width:520px;margin:0 auto;padding:0 16px}
+  <style>
+    :root{
+      --navy:#1B396A;--navy-700:#13294B;--teal:#B38E5D;--teal-600:#9A7646;--teal-50:#F7F2EA;
+      --orange:#800020;--orange-700:#610018;--orange-50:#F9ECEF;--slate:#54585A;--mist:#F4F6F9;--line:#D6DCE5;
+      --green:#15803D;--green-bg:#DCFCE7;--red:#B91C1C;--red-bg:#FEE2E2;
+    }
+    *{box-sizing:border-box;font-family:'Inter',system-ui,-apple-system,sans-serif}
+    body{margin:0;background:var(--mist);color:#0F172A;min-height:100vh;display:flex;flex-direction:column}
+    header{background:var(--navy);color:#fff;padding:14px 18px;border-bottom:3px solid var(--teal);display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+    .brand{display:flex;align-items:center;gap:12px}
+    .logo-badge{width:42px;height:42px;border-radius:10px;background:#fff;color:var(--navy);display:grid;place-items:center;font-weight:800;font-size:12px;text-align:center;line-height:1.05;border:2px solid var(--teal)}
+    .brand h1{margin:0;font-size:18px;font-weight:800;letter-spacing:-.01em}
+    .brand small{display:block;color:#E6D3B5;font-size:12px;font-weight:600}
+    .status-pill{display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22);padding:6px 12px;border-radius:999px;font-size:12px;font-weight:700}
+    .dot{width:8px;height:8px;border-radius:50%;background:#34D399}
+    .dot.offline{background:#FBBF24}
 
-/* Encabezado */
-.top{background:var(--navy);color:#fff;border-bottom:4px solid var(--teal);padding:calc(10px + env(safe-area-inset-top)) 0 10px;
-  background-image:linear-gradient(135deg,rgba(179,142,93,.22),transparent 65%);position:sticky;top:0;z-index:20}
-.top .wrap{display:flex;align-items:center;gap:12px}
-.top img,.top .logo-tec{border-radius:10px;flex:none}
-.top strong{font-size:19px;font-weight:800;letter-spacing:-.01em;display:block;line-height:1.1}
-.top small{color:#E6D3B5;font-size:11.5px;font-weight:600;display:block;margin-top:2px}
-.modo{margin-left:auto;border:1px solid rgba(255,255,255,.22);background:rgba(255,255,255,.12);color:#fff;border-radius:999px;padding:6px 12px;font-size:12px;font-weight:700;cursor:pointer;
-  display:inline-flex;align-items:center;gap:6px;min-height:36px;white-space:nowrap}
-.modo::before{content:"";width:8px;height:8px;border-radius:50%;background:#6EE7B7}
-.modo.config::before{background:#E6D3B5}
+    .tabs{display:flex;background:#fff;border-bottom:1px solid var(--line);padding:0 16px;gap:6px;justify-content:center}
+    .tab-btn{border:none;background:none;padding:13px 18px;font-size:14px;font-weight:700;color:var(--slate);cursor:pointer;border-bottom:3px solid transparent;transition:.15s}
+    .tab-btn.active{color:var(--navy);border-bottom-color:var(--navy)}
 
-main{padding-top:20px}
-.view{animation:entra .25s ease both}
-@keyframes entra{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
-.eyebrow{margin:0 0 4px;color:var(--teal-600);font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase}
-h1{margin:0 0 6px;font-size:28px;line-height:1.12;font-weight:800;letter-spacing:-.02em}
-h2{margin:0;font-size:18px;font-weight:700}
-.lead{margin:0 0 16px;color:var(--slate);font-size:16px}
+    main{width:100%;max-width:520px;margin:20px auto;padding:0 14px 40px;flex:1}
+    .card{background:#fff;border-radius:20px;padding:20px;box-shadow:0 8px 28px rgba(27,57,106,.08);border:1px solid var(--line)}
+    .hidden{display:none!important}
 
-/* Tarjetas y formularios */
-.card{background:#fff;border:1px solid var(--line);border-top:4px solid var(--teal);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow);margin-bottom:16px}
-.card-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
-.field{margin:0 0 14px;border:0;padding:0;min-width:0}
-label,legend{display:block;font-weight:600;font-size:14px;margin:0 0 6px;padding:0}
-.req{color:var(--orange-700)}
-input[type=text],input[type=date],input[type=time],select,textarea{width:100%;min-height:50px;padding:10px 14px;border:1.5px solid #BFCAD6;border-radius:12px;background:#fff;font-size:16px}
-textarea{min-height:84px;resize:vertical}
-select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5l5 5 5-5' fill='none' stroke='%2354585A' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:38px}
-input:focus-visible,select:focus-visible,textarea:focus-visible{outline:none;border-color:var(--navy);box-shadow:0 0 0 4px rgba(27,57,106,.18)}
-.invalid input,.invalid select{border-color:var(--orange);background:#FFF9FA}
-.hint{margin:6px 0 0;font-size:13px;color:var(--slate)}
-.err{margin:6px 0 0;font-size:13px;font-weight:600;color:var(--orange-700)}
-.err:empty{display:none}
-.chips{display:flex;flex-wrap:wrap;gap:8px}
-.chip{position:relative}
-.chip input{position:absolute;opacity:0;inset:0;width:100%;height:100%;margin:0;cursor:pointer}
-.chip span{display:inline-flex;align-items:center;min-height:46px;padding:0 16px;border-radius:999px;border:1.5px solid #BFCAD6;background:#fff;font-weight:600;font-size:15px}
-.chip input:checked+span{background:var(--navy);border-color:var(--navy);color:#fff}
-.chip input:focus-visible+span{box-shadow:0 0 0 4px rgba(179,142,93,.35)}
-.invalid .chip span{border-color:var(--orange)}
-.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-details.mas{margin:0 0 14px;background:var(--mist);border-radius:14px;padding:4px 14px}
-details.mas summary{cursor:pointer;min-height:48px;display:flex;align-items:center;font-weight:600;font-size:14px;color:var(--navy);list-style:none}
-details.mas summary::-webkit-details-marker{display:none}
-details.mas[open]{padding-bottom:12px}
-.check{display:flex;gap:12px;align-items:flex-start;font-weight:500;cursor:pointer}
-.check input{width:26px;height:26px;margin:1px 0 0;accent-color:var(--navy);flex:none}
-.link{background:none;border:0;padding:0;color:var(--navy);font-weight:700;text-decoration:underline;cursor:pointer;font-size:inherit}
+    label.field-lbl{display:block;font-size:13px;font-weight:700;color:var(--navy);margin:14px 0 6px}
+    label.field-lbl:first-child{margin-top:0}
+    .req{color:var(--orange)}
+    input[type="text"],select{width:100%;padding:12px 14px;border:1.5px solid var(--line);border-radius:12px;font-size:15px;color:#0F172A;background:#fff;transition:.15s}
+    input[type="text"]:focus,select:focus{outline:none;border-color:var(--navy);box-shadow:0 0 0 3px rgba(27,57,106,.12)}
+    input.uppercase{text-transform:uppercase;letter-spacing:.04em;font-weight:600}
+    .hint{font-size:12px;color:var(--slate);margin-top:4px;display:block}
+    .val-msg{font-size:12px;font-weight:700;margin-top:5px;display:flex;align-items:center;gap:5px}
+    .val-ok{color:var(--green)}
+    .val-err{color:var(--red)}
 
-/* Botones */
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:52px;padding:0 20px;border:1.5px solid transparent;border-radius:14px;font-weight:700;font-size:16px;cursor:pointer;text-decoration:none}
-.btn:active{transform:translateY(1px)}
-.btn:focus-visible{outline:3px solid rgba(179,142,93,.55);outline-offset:2px}
-.btn-primary{background:var(--navy);color:#fff}
-.btn-accent{background:var(--teal-600);color:#fff}
-.btn-ghost{background:#fff;border-color:#BFCAD6;color:var(--navy)}
-.btn-danger{background:#fff;border-color:#E2B4BF;color:var(--red-700)}
-.btn-lg{min-height:58px;font-size:17px}
-.btn-sm{min-height:44px;padding:0 14px;font-size:14px}
-.btn-block{width:100%}
-.btn[disabled]{opacity:.6}
-.stack{display:grid;gap:10px}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .chips{display:flex;flex-wrap:wrap;gap:8px}
+    .chip{border:1.5px solid var(--line);background:#fff;color:var(--navy);padding:9px 14px;border-radius:999px;font-size:13px;font-weight:700;cursor:pointer;transition:.15s}
+    .chip.selected{background:var(--navy);color:#fff;border-color:var(--navy)}
 
-/* Selector de pases */
-.sel{display:flex;gap:8px;overflow-x:auto;padding:2px 0 14px;margin:0 -16px;padding-left:16px;padding-right:16px;scrollbar-width:none}
-.sel::-webkit-scrollbar{display:none}
-.sel button{flex:none;min-height:46px;padding:0 16px;border-radius:999px;border:1.5px solid #BFCAD6;background:#fff;font-weight:600;font-size:14px;cursor:pointer;max-width:230px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.sel button[aria-current=true]{background:var(--navy);border-color:var(--navy);color:#fff}
+    /* Captura de Identificación */
+    .id-box{border:1.5px dashed var(--teal);background:var(--teal-50);border-radius:14px;padding:14px;margin-top:6px}
+    .id-actions{display:flex;gap:8px;flex-wrap:wrap}
+    .btn-sec{flex:1;min-width:130px;padding:10px 12px;border-radius:10px;border:1.5px solid var(--navy);background:#fff;color:var(--navy);font-weight:700;font-size:13px;cursor:pointer;text-align:center}
+    .btn-sec:hover{background:var(--mist)}
+    #cam-wrap{margin-top:10px;border-radius:12px;overflow:hidden;background:#000;position:relative}
+    #id-video{width:100%;max-height:240px;object-fit:cover;display:block}
+    .snap-bar{display:flex;gap:8px;padding:8px;background:#111827}
+    #id-preview-wrap{margin-top:10px;position:relative}
+    #id-preview{width:100%;max-height:200px;object-fit:cover;border-radius:10px;border:1.5px solid var(--navy);display:block}
+    .badge-verified{display:inline-flex;align-items:center;gap:5px;background:var(--green-bg);color:var(--green);font-size:12px;font-weight:700;padding:4px 10px;border-radius:999px;margin-top:6px}
 
-/* Pase */
-.pase{position:relative;background:#fff;border-radius:24px;overflow:hidden;box-shadow:0 2px 4px rgba(27,57,106,.08),0 18px 40px rgba(27,57,106,.16);border:1px solid var(--line);margin-bottom:14px}
-.pase-head{background:var(--navy);color:#fff;padding:14px 16px;display:flex;align-items:center;gap:12px;border-bottom:3px solid var(--teal);background-image:linear-gradient(135deg,rgba(179,142,93,.28),transparent 65%)}
-.pase-head svg{flex:none;border-radius:8px}
-.pase-head strong{display:block;font-size:17px;font-weight:800;line-height:1.1}
-.pase-head small{color:#E6D3B5;font-size:12px;font-weight:600}
-.st{margin-left:auto;display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:999px;font-size:12px;font-weight:700;white-space:nowrap;background:var(--mist)}
-.st::before{content:"";width:8px;height:8px;border-radius:50%;background:currentColor}
-.st-pend{background:var(--teal-50);color:#7D5D32}.st-dentro{background:#E3ECF9;color:#1B396A}
-.st-cerrada{background:#EAEEF3;color:var(--slate)}.st-venc{background:var(--orange-50);color:var(--orange-700)}
-.qr-box{position:relative;padding:20px 20px 4px;display:grid;place-items:center}
-.qr-box canvas{width:100%;max-width:280px;height:auto;aspect-ratio:1;border-radius:6px;image-rendering:pixelated}
-.qr-box.off canvas{opacity:.12;filter:blur(2px)}
-.qr-box .candado{position:absolute;inset:0;display:grid;place-content:center;justify-items:center;gap:8px;text-align:center;color:var(--slate);font-weight:600;font-size:14px;padding:0 44px}
-.barra{height:6px;border-radius:3px;background:var(--mist);margin:12px 24px 6px;overflow:hidden}
-.barra i{display:block;height:100%;background:var(--teal);transform-origin:left;transition:transform 1s linear}
-.barra-txt{margin:0 0 4px;text-align:center;color:var(--slate);font-size:13px}
-.corte{position:relative;border-top:2px dashed var(--line);margin:12px 20px 0}
-.corte::before,.corte::after{content:"";position:absolute;top:-13px;width:24px;height:24px;border-radius:50%;background:var(--mist);border:1px solid var(--line)}
-.corte::before{left:-33px;clip-path:inset(0 0 0 50%)}.corte::after{right:-33px;clip-path:inset(0 50% 0 0)}
-.pase-body{padding:14px 20px 18px}
-.pase-nombre{margin:0 0 10px;font-size:22px;font-weight:800;line-height:1.2;word-break:break-word}
-.datos{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;margin:0;font-size:14px}
-.datos dt{color:var(--slate);font-weight:600}.datos dd{margin:0;font-weight:600;word-break:break-word}
-.pie{display:flex;justify-content:space-between;gap:8px;margin-top:14px;padding-top:10px;border-top:1px solid var(--mist);font-size:12px;color:var(--slate)}
-.pie code{font-family:ui-monospace,Menlo,monospace;font-weight:700;color:var(--navy);letter-spacing:.08em}
+    .privacy-row{display:flex;align-items:flex-start;gap:10px;margin:16px 0;font-size:13px;color:var(--slate)}
+    .privacy-row input{width:18px;height:18px;margin-top:2px;accent-color:var(--navy)}
 
-/* Caseta */
-.scanner{position:relative;aspect-ratio:1;width:100%;border-radius:16px;overflow:hidden;background:var(--navy);display:grid;place-items:center;margin-bottom:12px;
-  background-image:linear-gradient(135deg,rgba(179,142,93,.25),transparent 60%)}
-.scanner video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:none}
-.scanner.live video{display:block}
-.scan-idle{text-align:center;color:#E2E8F0;padding:0 24px}.scan-idle svg{margin:0 auto 8px;width:46px;height:46px}
-.scanner.live .scan-idle{display:none}
-.marco{position:absolute;inset:14%;pointer-events:none}
-.marco i{position:absolute;width:34px;height:34px;border:4px solid #fff}
-.marco i:nth-child(1){left:0;top:0;border-right:0;border-bottom:0;border-radius:10px 0 0 0}
-.marco i:nth-child(2){right:0;top:0;border-left:0;border-bottom:0;border-radius:0 10px 0 0}
-.marco i:nth-child(3){left:0;bottom:0;border-right:0;border-top:0;border-radius:0 0 0 10px}
-.marco i:nth-child(4){right:0;bottom:0;border-left:0;border-top:0;border-radius:0 0 10px 0}
-.scanner.live .marco i{border-color:#E6D3B5}
-.result{border-radius:var(--radius);padding:20px;background:#fff;border:1px solid var(--line);box-shadow:var(--shadow);margin-bottom:16px}
-.result.vacio{text-align:center;color:var(--slate);border-style:dashed;box-shadow:none;background:transparent}
-.result.vacio h2{color:var(--navy);margin:8px 0 2px}.result.vacio svg{margin:0 auto;width:40px;height:40px}
-.result.ok{border-top:6px solid #1E7E5A}.result.bad{border-top:6px solid var(--orange)}
-.r-head{display:flex;align-items:center;gap:14px;margin-bottom:12px}
-.sello{width:58px;height:58px;border-radius:18px;display:grid;place-items:center;color:#fff;flex:none}
-.sello svg{width:32px;height:32px}.ok .sello{background:#1E7E5A}.bad .sello{background:var(--orange-700)}
-.r-head h2{font-size:26px;font-weight:800;line-height:1.1}.r-head p{margin:2px 0 0;color:var(--slate);font-size:14px}
-.motivo-mal{margin:0 0 12px;padding:12px 14px;border-radius:12px;background:var(--orange-50);color:#610018;font-weight:600}
-.r-nombre{margin:0 0 8px;font-size:24px;font-weight:800;line-height:1.2;word-break:break-word}
-.result .datos{margin-bottom:14px;padding:12px;background:var(--mist);border-radius:12px}
-.id-aviso{display:flex;gap:10px;margin:0 0 12px;padding:12px 14px;border-radius:12px;background:var(--teal-50);color:#5E4422;font-size:14px;font-weight:600}
-.id-aviso svg{margin-top:2px}
+    .btn-primary{width:100%;padding:14px;border:none;border-radius:14px;background:var(--navy);color:#fff;font-size:15px;font-weight:800;cursor:pointer;transition:.15s}
+    .btn-primary:hover{background:var(--navy-700)}
+    .btn-primary:disabled{opacity:.5;cursor:not-allowed}
 
-/* Registro */
-.stats{display:grid;gap:10px;grid-template-columns:repeat(3,1fr);margin-bottom:16px}
-.stat{background:#fff;border:1px solid var(--line);border-radius:16px;padding:12px 12px;box-shadow:var(--shadow)}
-.stat b{display:block;font-size:30px;font-weight:800;line-height:1;font-variant-numeric:tabular-nums}
-.stat span{display:block;margin-top:4px;color:var(--slate);font-size:12px;font-weight:600}
-.stat.dentro{background:var(--navy);color:#fff;border-color:var(--navy)}.stat.dentro span{color:#E6D3B5}
-.alerta{margin-bottom:14px;padding:14px 16px;border-radius:14px;background:var(--orange-50);border:1px solid #E5B9C4;border-left:6px solid var(--orange);color:#610018;font-weight:600}
-.lista{display:grid;gap:10px}
-.item{display:flex;align-items:center;gap:12px;padding:12px 14px;background:var(--mist);border-radius:14px;flex-wrap:wrap}
-.item-main{flex:1;min-width:170px}.item-main strong{display:block}
-.meta{color:var(--slate);font-size:14px}
-.vacio{margin:0;padding:24px 14px;text-align:center;color:var(--slate);background:var(--mist);border:1.5px dashed var(--line);border-radius:14px}
-.vacio b{display:block;color:var(--navy);margin-bottom:2px}
-.tabla-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px;margin-top:10px}
-.tabla{width:100%;border-collapse:collapse;font-size:14px;min-width:560px}
-.tabla th{background:var(--navy);color:#fff;text-align:left;padding:10px 12px;white-space:nowrap}
-.tabla td{padding:10px 12px;border-top:1px solid var(--line)}
-.tabla tbody tr:nth-child(even){background:#F8FAFC}
-.sesion{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px;padding:10px 14px;border-radius:14px;background:#fff;border:1px solid var(--line);font-size:14px}
-.sesion b{display:block}.sesion span{color:var(--slate);font-size:13px;word-break:break-all}
-.login p{color:var(--slate);margin:0 0 14px}
-.info-bar{padding:14px;border:1px dashed #B5C1CF;border-radius:14px;color:var(--slate);font-size:14px;background:#fff}
-.info-bar p{margin:0 0 10px}
+    /* Pase generado */
+    .pase{background:#fff;border-radius:22px;overflow:hidden;box-shadow:0 14px 36px rgba(27,57,106,.14);border:1px solid var(--line)}
+    .pase-head{background:var(--navy);color:#fff;padding:15px 18px;display:flex;align-items:center;gap:12px;border-bottom:3px solid var(--teal)}
+    .st{margin-left:auto;padding:5px 12px;border-radius:999px;font-size:12px;font-weight:800;background:var(--teal-50);color:var(--teal-600)}
+    .st.dentro{background:var(--green-bg);color:var(--green)}
+    .qr-box{padding:22px 20px 10px;display:grid;place-items:center}
+    #qrcode{padding:12px;background:#fff;border-radius:12px;border:1px solid var(--line)}
+    .barra{height:6px;background:var(--mist);border-radius:3px;margin:10px 24px 6px;overflow:hidden}
+    .barra i{display:block;height:100%;background:var(--teal);width:100%;transition:width 1s linear}
+    .barra-txt{text-align:center;font-size:12px;color:var(--slate);margin:0 0 12px}
+    .corte{border-top:2px dashed var(--line);margin:8px 18px}
+    .pase-body{padding:14px 20px 20px}
+    .pase-nombre{margin:0 0 10px;font-size:21px;font-weight:800;color:var(--navy);text-transform:uppercase}
+    .datos{display:grid;grid-template-columns:auto 1fr;gap:7px 14px;font-size:14px;margin:0}
+    .datos dt{color:var(--slate);font-weight:600}
+    .datos dd{margin:0;font-weight:700;color:#0F172A}
+    .pase-id-thumb{margin-top:12px;border-top:1px solid var(--mist);padding-top:10px}
+    .pase-id-thumb img{width:100%;max-height:140px;object-fit:cover;border-radius:10px;border:1px solid var(--line)}
 
-/* Barra inferior, diálogos, aviso */
-.bar{position:fixed;left:0;right:0;bottom:0;z-index:30;background:#fff;border-top:1px solid var(--line);display:flex;justify-content:space-around;gap:4px;
-  padding:6px 8px calc(6px + env(safe-area-inset-bottom));box-shadow:0 -6px 20px rgba(27,57,106,.08)}
-.bar button{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;min-height:56px;border:0;border-radius:14px;background:none;color:var(--slate);font-size:12px;font-weight:700;cursor:pointer;position:relative}
-.bar button[aria-current=page]{background:var(--teal-50);color:var(--navy);box-shadow:inset 0 0 0 1.5px rgba(179,142,93,.45)}
-.badge{position:absolute;top:4px;right:calc(50% - 30px);min-width:20px;height:20px;border-radius:10px;background:var(--orange);color:#fff;font-size:11px;font-weight:700;display:grid;place-items:center;padding:0 5px}
-.dlg{border:0;border-radius:var(--radius);padding:22px;width:calc(100% - 24px);max-width:520px;box-shadow:0 20px 60px rgba(27,57,106,.35);max-height:92vh}
-.dlg::backdrop{background:rgba(27,57,106,.55)}
-.dlg h2{margin-bottom:8px}.dlg p{color:var(--slate);margin:0 0 12px}
-.dlg ol{padding-left:20px;margin:0 0 14px}.dlg li{margin-bottom:10px}
-.dlg code,.dlg pre{font-family:ui-monospace,Menlo,monospace;font-size:12px}
-.dlg textarea{font-family:ui-monospace,Menlo,monospace;font-size:12px;min-height:150px}
-.toast{position:fixed;left:50%;bottom:calc(96px + env(safe-area-inset-bottom));transform:translate(-50%,16px);opacity:0;pointer-events:none;z-index:60;background:var(--navy);color:#fff;
-  padding:12px 20px;border-radius:12px;font-weight:600;font-size:14px;max-width:calc(100% - 32px);text-align:center;box-shadow:0 10px 30px rgba(27,57,106,.35);transition:all .25s}
-.toast.on{opacity:1;transform:translate(-50%,0)}
-.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
-@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
-</style>
+    /* Caseta */
+    #reader{width:100%;border-radius:14px;overflow:hidden;border:2px solid var(--navy);background:#000}
+    .scan-result{margin-top:16px;padding:16px;border-radius:14px;border:1.5px solid var(--green);background:#F0FDF4}
+    .scan-result.err{border-color:var(--red);background:var(--red-bg)}
+  </style>
 </head>
-
 <body>
 
-<!-- ============================================================
-     ★ EDITA AQUÍ (único lugar que necesitas cambiar) ★
-     ============================================================ -->
+<header>
+  <div class="brand">
+    <div class="logo-badge">TecNM<br>MATEHUALA</div>
+    <div>
+      <h1>AccesoQR</h1>
+      <small>TecNM · Campus Matehuala</small>
+    </div>
+  </div>
+  <div class="status-pill" id="cloud-status">
+    <span class="dot offline" id="status-dot"></span>
+    <span id="status-text">Conectando...</span>
+  </div>
+</header>
+
+<nav class="tabs">
+  <button class="tab-btn active" id="tab-visitante" onclick="switchTab('visitante')">Solicitar Pase</button>
+  <button class="tab-btn" id="tab-caseta" onclick="switchTab('caseta')">Caseta / Escáner</button>
+</nav>
+
+<main>
+  <!-- VISTA 1: FORMULARIO VISITANTE -->
+  <section id="view-form" class="card">
+    <form id="form-pase" novalidate>
+      <label class="field-lbl" for="nombre">Nombre completo <span class="req">*</span></label>
+      <input type="text" id="nombre" placeholder="Ej. María Fernanda López" required autocomplete="name">
+      <span class="hint">Tal como aparece en tu identificación oficial.</span>
+
+      <label class="field-lbl" for="curp">CURP (18 caracteres) <span class="req">*</span></label>
+      <input type="text" id="curp" class="uppercase" maxlength="18" placeholder="Ej. LOMF950412MSLLRR09" required>
+      <span class="val-msg" id="curp-feedback">Ingresa los 18 caracteres de tu CURP oficial.</span>
+
+      <label class="field-lbl">Identificación Oficial (INE / Credencial) <span class="req">*</span></label>
+      <div class="id-box">
+        <div class="id-actions">
+          <button type="button" class="btn-sec" onclick="startIdCamera()">📷 Tomar foto con cámara</button>
+          <label class="btn-sec" style="cursor:pointer;">
+            📁 Subir imagen
+            <input type="file" id="id-file" accept="image/*" capture="environment" class="hidden" onchange="handleIdFile(event)">
+          </label>
+        </div>
+
+        <div id="cam-wrap" class="hidden">
+          <video id="id-video" autoplay playsinline></video>
+          <div class="snap-bar">
+            <button type="button" class="btn-primary" style="padding:10px;" onclick="captureIdPhoto()">Capturar Identificación</button>
+            <button type="button" class="btn-sec" style="flex:0 0 auto;" onclick="stopIdCamera()">Cancelar</button>
+          </div>
+        </div>
+
+        <div id="id-preview-wrap" class="hidden">
+          <img id="id-preview" alt="Vista previa de identificación">
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <span class="badge-verified">✓ Identificación adjunta</span>
+            <button type="button" class="btn-sec" style="flex:0 0 auto;padding:5px 10px;margin-top:6px;" onclick="clearIdPhoto()">Quitar</button>
+          </div>
+        </div>
+        <canvas id="id-canvas" class="hidden"></canvas>
+      </div>
+
+      <label class="field-lbl">Motivo de la visita <span class="req">*</span></label>
+      <div class="chips" id="motivos-list"></div>
+
+      <label class="field-lbl" for="area">¿A dónde vas? <span class="req">*</span></label>
+      <select id="area" required>
+        <option value="">Elige un área...</option>
+      </select>
+
+      <div class="privacy-row">
+        <input type="checkbox" id="privacidad" required>
+        <label for="privacidad">Acepto el <strong>aviso de privacidad</strong> del TecNM Campus Matehuala para validar mi identidad y registrar mi visita. <span class="req">*</span></label>
+      </div>
+
+      <button type="submit" class="btn-primary" id="btn-generar">✓ Generar mi pase verificado</button>
+    </form>
+  </section>
+
+  <!-- VISTA 2: PASE GENERADO -->
+  <section id="view-pase" class="hidden">
+    <div class="pase">
+      <div class="pase-head">
+        <div class="logo-badge" style="width:36px;height:36px;font-size:10px;">TecNM<br>MAT</div>
+        <div>
+          <strong style="display:block;font-size:16px;">Pase de visita</strong>
+          <small style="color:#E6D3B5;font-size:12px;">TecNM · Campus Matehuala</small>
+        </div>
+        <span class="st" id="pase-estado">● Pendiente</span>
+      </div>
+
+      <div class="qr-box">
+        <div id="qrcode"></div>
+      </div>
+      <div class="barra"><i id="qr-bar"></i></div>
+      <p class="barra-txt" id="qr-timer">Se renueva en 15 s · código dinámico</p>
+
+      <div class="corte"></div>
+
+      <div class="pase-body">
+        <h2 class="pase-nombre" id="p-nombre"></h2>
+        <dl class="datos">
+          <dt>CURP</dt><dd id="p-curp" style="font-family:monospace;"></dd>
+          <dt>Destino</dt><dd id="p-area"></dd>
+          <dt>Fecha</dt><dd id="p-fecha"></dd>
+          <dt>Horario</dt><dd id="p-horario"></dd>
+          <dt>Motivo</dt><dd id="p-motivo"></dd>
+          <dt>Folio</dt><dd id="p-folio" style="font-family:monospace;font-size:12px;"></dd>
+        </dl>
+        <div class="pase-id-thumb" id="p-id-box">
+          <small style="display:block;color:var(--slate);font-weight:700;margin-bottom:6px;">Identificación verificada:</small>
+          <img id="p-id-img" alt="Identificación del visitante">
+        </div>
+
+        <button type="button" class="btn-sec" style="width:100%;margin-top:16px;" onclick="nuevoPase()">+ Generar otro pase</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- VISTA 3: CASETA / ESCÁNER -->
+  <section id="view-caseta" class="card hidden">
+    <h2 style="margin:0 0 6px;font-size:18px;color:var(--navy);">Validación en Caseta</h2>
+    <p style="margin:0 0 14px;font-size:13px;color:var(--slate);">Escanea el código QR del visitante o ingresa su folio para verificar su CURP, fotografía de identificación y registrar su entrada.</p>
+
+    <div style="display:flex;gap:8px;margin-bottom:12px;">
+      <button type="button" class="btn-primary" style="padding:11px;" onclick="startScanner()">📷 Activar escáner QR</button>
+      <button type="button" class="btn-sec" style="flex:0 0 auto;" onclick="stopScanner()">Detener</button>
+    </div>
+
+    <div id="reader"></div>
+
+    <div style="margin-top:14px;display:flex;gap:8px;">
+      <input type="text" id="manual-folio" placeholder="O pega el Folio del pase...">
+      <button type="button" class="btn-sec" style="flex:0 0 auto;" onclick="validarPorFolio(document.getElementById('manual-folio').value.trim())">Validar</button>
+    </div>
+
+    <div id="scan-output" class="hidden"></div>
+  </section>
+</main>
+
+<!-- Firebase SDKs (Compat) -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
 <script>
 window.ACCESOQR = {
   institucion: "TecNM · Campus Matehuala",
-
-  // 1) Datos de tu proyecto de Firebase para sincronizar entre dispositivos.
-   firebase: {
+  firebase: {
     apiKey: "AIzaSyCn9CgK1RxzwTlAPUYU05g8HXg_onYZ1Qw",
     authDomain: "instituto-qr-10f10.firebaseapp.com",
     projectId: "instituto-qr-10f10",
     appId: "1:811418531401:web:c05693e300311e96beb198"
   },
-  
-
-  // 2) Correos de Google del personal.
-  vigilantes: [],                 // ej. ["vigilante.tec@gmail.com"]
-  admins: [],                     // ej. ["jefa.recursos@gmail.com"]
-
-  // 3) Ajustes
-  horaCierre: "20:00",
   ventanaMinutos: 120,
   motivos: ["Proveedor", "Padre de familia", "Aspirante", "Invitado", "Otro"],
-  areas: ["Dirección", "Subdirección Académica", "Subdirección de Planeación y Vinculación",
-          "Subdirección de Servicios Administrativos", "Servicios Escolares", "Recursos Materiales y Servicios",
-          "Recursos Financieros", "Centro de Información", "Sistemas Computacionales", "Otra área"],
-  avisoPrivacidad: "Usamos tus datos solo para registrar tu visita al campus. No guardamos fotos ni copias de tu identificación. Su tratamiento sigue la Ley General de Protección de Datos Personales en Posesión de Sujetos Obligados."
+  areas: [
+    "Dirección",
+    "Subdirección Académica",
+    "Subdirección de Planeación y Vinculación",
+    "Subdirección de Servicios Administrativos",
+    "Servicios Escolares",
+    "División de Estudios Profesionales",
+    "Centro de Información / Biblioteca",
+    "Laboratorios / Talleres"
+  ]
 };
-</script>
 
-<header class="top">
-  <div class="wrap">
-    <!-- Logotipo Institucional TecNM · Campus Matehuala -->
-    <svg class="logo-tec" width="46" height="46" viewBox="0 0 120 120" role="img" aria-label="Logotipo TecNM Campus Matehuala">
-      <rect width="120" height="120" rx="18" fill="#ffffff"/>
-      <rect x="4" y="4" width="112" height="112" rx="14" fill="none" stroke="#B38E5D" stroke-width="2.5"/>
-      <circle cx="60" cy="40" r="19" fill="none" stroke="#1B396A" stroke-width="4" stroke-dasharray="6 3.5"/>
-      <circle cx="60" cy="40" r="12" fill="#1B396A"/>
-      <path d="M60 29 C56 35, 57 42, 60 46 C63 42, 64 35, 60 29 Z" fill="#B38E5D"/>
-      <path d="M44 48 Q60 56 76 48" fill="none" stroke="#B38E5D" stroke-width="3" stroke-linecap="round"/>
-      <text x="60" y="79" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-weight="800" font-size="23" fill="#1B396A" letter-spacing="-0.5">TecNM</text>
-      <rect x="14" y="87" width="92" height="19" rx="5" fill="#1B396A"/>
-      <text x="60" y="100" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-weight="700" font-size="11.5" fill="#E6D3B5" letter-spacing="0.8">MATEHUALA</text>
-    </svg>
-    <div>
-      <strong>AccesoQR</strong>
-      <small>TecNM · Campus Matehuala</small>
-    </div>
-    <button class="modo" id="modo" type="button">Conectando…</button>
-  </div>
-</header>
+let db = null;
+let authReady = false;
+let selectedMotivo = "Proveedor";
+let fotoIdBase64 = "";
+let idStream = null;
+let currentPase = null;
+let qrInterval = null;
+let html5QrScanner = null;
 
-<main class="wrap" id="app"></main>
-
-<nav class="bar" aria-label="Secciones">
-  <button data-tab="pase"><svg class="ico" viewBox="0 0 24 24"><path d="M3 8a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2a2 2 0 0 0 0 4v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 0 0-4z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M14 6v12" stroke="currentColor" stroke-width="1.8" stroke-dasharray="2 2.4"/></svg>Mi pase</button>
-  <button data-tab="caseta"><svg class="ico" viewBox="0 0 24 24"><path d="M4 8V5a1 1 0 0 1 1-1h3M16 4h3a1 1 0 0 1 1 1v3M20 16v3a1 1 0 0 1-1 1h-3M8 20H5a1 1 0 0 1-1-1v-3M4 12h16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Caseta</button>
-  <button data-tab="registro"><svg class="ico" viewBox="0 0 24 24"><path d="M8 6h12M8 12h12M8 18h12M4 6h.01M4 12h.01M4 18h.01" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>Registro<b class="badge" id="badge" hidden>0</b></button>
-</nav>
-
-<dialog class="dlg" id="dlg-aviso"><h2>Aviso de privacidad</h2><p id="aviso-txt"></p><button class="btn btn-primary btn-block" id="aviso-ok">Entendido</button></dialog>
-<dialog class="dlg" id="dlg-setup"></dialog>
-<div class="toast" id="toast" role="status" aria-live="polite"></div>
-
-<!-- Generador de QR (Kazuhiko Arase, licencia MIT) -->
-<script>
-(function(global){
-var __mods={},__cache={};
-function __req(n){n=n.replace('./','');if(__cache[n])return __cache[n].exports;var m=__cache[n]={exports:{}};__mods[n](m,m.exports,__req);return m.exports;}
-__mods['QR8bitByte']=function(module,exports,require){
-var QRMode = require('./QRMode');
-function QR8bitByte(data) { this.mode = QRMode.MODE_8BIT_BYTE; this.data = data; }
-QR8bitByte.prototype = {
-	getLength : function() { return this.data.length; },
-	write : function(buffer) { for (var i = 0; i < this.data.length; i++) buffer.put(this.data.charCodeAt(i), 8); }
-};
-module.exports = QR8bitByte;
-};
-__mods['QRBitBuffer']=function(module,exports,require){
-function QRBitBuffer() { this.buffer = []; this.length = 0; }
-QRBitBuffer.prototype = {
-	get : function(index) { var bufIndex = Math.floor(index / 8); return ( (this.buffer[bufIndex] >>> (7 - index % 8) ) & 1) == 1; },
-	put : function(num, length) { for (var i = 0; i < length; i++) this.putBit( ( (num >>> (length - i - 1) ) & 1) == 1); },
-	getLengthInBits : function() { return this.length; },
-	putBit : function(bit) {
-		var bufIndex = Math.floor(this.length / 8);
-		if (this.buffer.length <= bufIndex) this.buffer.push(0);
-		if (bit) this.buffer[bufIndex] |= (0x80 >>> (this.length % 8) );
-		this.length++;
-	}
-};
-module.exports = QRBitBuffer;
-};
-__mods['QRErrorCorrectLevel']=function(module,exports,require){
-module.exports = { L : 1, M : 0, Q : 3, H : 2 };
-};
-__mods['QRMaskPattern']=function(module,exports,require){
-module.exports = { PATTERN000 : 0, PATTERN001 : 1, PATTERN010 : 2, PATTERN011 : 3, PATTERN100 : 4, PATTERN101 : 5, PATTERN110 : 6, PATTERN111 : 7 };
-};
-__mods['QRMath']=function(module,exports,require){
-var QRMath = {
-	glog : function(n) { if (n < 1) throw new Error("glog(" + n + ")"); return QRMath.LOG_TABLE[n]; },
-	gexp : function(n) { while (n < 0) n += 255; while (n >= 256) n -= 255; return QRMath.EXP_TABLE[n]; },
-	EXP_TABLE : new Array(256), LOG_TABLE : new Array(256)
-};
-for (var i = 0; i < 8; i++) QRMath.EXP_TABLE[i] = 1 << i;
-for (var i = 8; i < 256; i++) QRMath.EXP_TABLE[i] = QRMath.EXP_TABLE[i - 4] ^ QRMath.EXP_TABLE[i - 5] ^ QRMath.EXP_TABLE[i - 6] ^ QRMath.EXP_TABLE[i - 8];
-for (var i = 0; i < 255; i++) QRMath.LOG_TABLE[QRMath.EXP_TABLE[i] ] = i;
-module.exports = QRMath;
-};
-__mods['QRMode']=function(module,exports,require){
-module.exports = { MODE_NUMBER : 1 << 0, MODE_ALPHA_NUM : 1 << 1, MODE_8BIT_BYTE : 1 << 2, MODE_KANJI : 1 << 3 };
-};
-__mods['QRPolynomial']=function(module,exports,require){
-var QRMath = require('./QRMath');
-function QRPolynomial(num, shift) {
-	if (num.length === undefined) throw new Error(num.length + "/" + shift);
-	var offset = 0;
-	while (offset < num.length && num[offset] === 0) offset++;
-	this.num = new Array(num.length - offset + shift);
-	for (var i = 0; i < num.length - offset; i++) this.num[i] = num[i + offset];
-}
-QRPolynomial.prototype = {
-	get : function(index) { return this.num[index]; },
-	getLength : function() { return this.num.length; },
-	multiply : function(e) {
-		var num = new Array(this.getLength() + e.getLength() - 1);
-		for (var i = 0; i < this.getLength(); i++) for (var j = 0; j < e.getLength(); j++) num[i + j] ^= QRMath.gexp(QRMath.glog(this.get(i) ) + QRMath.glog(e.get(j) ) );
-		return new QRPolynomial(num, 0);
-	},
-	mod : function(e) {
-		if (this.getLength() - e.getLength() < 0) return this;
-		var ratio = QRMath.glog(this.get(0) ) - QRMath.glog(e.get(0) );
-		var num = new Array(this.getLength() );
-		for (var i = 0; i < this.getLength(); i++) num[i] = this.get(i);
-		for (var x = 0; x < e.getLength(); x++) num[x] ^= QRMath.gexp(QRMath.glog(e.get(x) ) + ratio);
-		return new QRPolynomial(num, 0).mod(e);
-	}
-};
-module.exports = QRPolynomial;
-};
-__mods['QRRSBlock']=function(module,exports,require){
-var QRErrorCorrectLevel = require('./QRErrorCorrectLevel');
-function QRRSBlock(totalCount, dataCount) { this.totalCount = totalCount; this.dataCount = dataCount; }
-QRRSBlock.RS_BLOCK_TABLE = [
-	[1, 26, 19],[1, 26, 16],[1, 26, 13],[1, 26, 9],
-	[1, 44, 34],[1, 44, 28],[1, 44, 22],[1, 44, 16],
-	[1, 70, 55],[1, 70, 44],[2, 35, 17],[2, 35, 13],
-	[1, 100, 80],[2, 50, 32],[2, 50, 24],[4, 25, 9],
-	[1, 134, 108],[2, 67, 43],[2, 33, 15, 2, 34, 16],[2, 33, 11, 2, 34, 12],
-	[2, 86, 68],[4, 43, 27],[4, 43, 19],[4, 43, 15],
-	[2, 98, 78],[4, 49, 31],[2, 32, 14, 4, 33, 15],[4, 39, 13, 1, 40, 14],
-	[2, 121, 97],[2, 60, 38, 2, 61, 39],[4, 40, 18, 2, 41, 19],[4, 40, 14, 2, 41, 15],
-	[2, 146, 116],[3, 58, 36, 2, 59, 37],[4, 36, 16, 4, 37, 17],[4, 36, 12, 4, 37, 13],
-	[2, 86, 68, 2, 87, 69],[4, 69, 43, 1, 70, 44],[6, 43, 19, 2, 44, 20],[6, 43, 15, 2, 44, 16],
-	[4, 101, 81],[1, 80, 50, 4, 81, 51],[4, 50, 22, 4, 51, 23],[3, 36, 12, 8, 37, 13],
-	[2, 116, 92, 2, 117, 93],[6, 58, 36, 2, 59, 37],[4, 46, 20, 6, 47, 21],[7, 42, 14, 4, 43, 15],
-	[4, 133, 107],[8, 59, 37, 1, 60, 38],[8, 44, 20, 4, 45, 21],[12, 33, 11, 4, 34, 12],
-	[3, 145, 115, 1, 146, 116],[4, 64, 40, 5, 65, 41],[11, 36, 16, 5, 37, 17],[11, 36, 12, 5, 37, 13],
-	[5, 109, 87, 1, 110, 88],[5, 65, 41, 5, 66, 42],[5, 54, 24, 7, 55, 25],[11, 36, 12],
-	[5, 122, 98, 1, 123, 99],[7, 73, 45, 3, 74, 46],[15, 43, 19, 2, 44, 20],[3, 45, 15, 13, 46, 16],
-	[1, 135, 107, 5, 136, 108],[10, 74, 46, 1, 75, 47],[1, 50, 22, 15, 51, 23],[2, 42, 14, 17, 43, 15],
-	[5, 150, 120, 1, 151, 121],[9, 69, 43, 4, 70, 44],[17, 50, 22, 1, 51, 23],[2, 42, 14, 19, 43, 15],
-	[3, 141, 113, 4, 142, 114],[3, 70, 44, 11, 71, 45],[17, 47, 21, 4, 48, 22],[9, 39, 13, 16, 40, 14],
-	[3, 135, 107, 5, 136, 108],[3, 67, 41, 13, 68, 42],[15, 54, 24, 5, 55, 25],[15, 43, 15, 10, 44, 16],
-	[4, 144, 116, 4, 145, 117],[17, 68, 42],[17, 50, 22, 6, 51, 23],[19, 46, 16, 6, 47, 17],
-	[2, 139, 111, 7, 140, 112],[17, 74, 46],[7, 54, 24, 16, 55, 25],[34, 37, 13],
-	[4, 151, 121, 5, 152, 122],[4, 75, 47, 14, 76, 48],[11, 54, 24, 14, 55, 25],[16, 45, 15, 14, 46, 16],
-	[6, 147, 117, 4, 148, 118],[6, 73, 45, 14, 74, 46],[11, 54, 24, 16, 55, 25],[30, 46, 16, 2, 47, 17],
-	[8, 132, 106, 4, 133, 107],[8, 75, 47, 13, 76, 48],[7, 54, 24, 22, 55, 25],[22, 45, 15, 13, 46, 16],
-	[10, 142, 114, 2, 143, 115],[19, 74, 46, 4, 75, 47],[28, 50, 22, 6, 51, 23],[33, 46, 16, 4, 47, 17],
-	[8, 152, 122, 4, 153, 123],[22, 73, 45, 3, 74, 46],[8, 53, 23, 26, 54, 24],[12, 45, 15, 28, 46, 16],
-	[3, 147, 117, 10, 148, 118],[3, 73, 45, 23, 74, 46],[4, 54, 24, 31, 55, 25],[11, 45, 15, 31, 46, 16],
-	[7, 146, 116, 7, 147, 117],[21, 73, 45, 7, 74, 46],[1, 53, 23, 37, 54, 24],[19, 45, 15, 26, 46, 16],
-	[5, 145, 115, 10, 146, 116],[19, 75, 47, 10, 76, 48],[15, 54, 24, 25, 55, 25],[23, 45, 15, 25, 46, 16],
-	[13, 145, 115, 3, 146, 116],[2, 74, 46, 29, 75, 47],[42, 54, 24, 1, 55, 25],[23, 45, 15, 28, 46, 16],
-	[17, 145, 115],[10, 74, 46, 23, 75, 47],[10, 54, 24, 35, 55, 25],[19, 45, 15, 35, 46, 16],
-	[17, 145, 115, 1, 146, 116],[14, 74, 46, 21, 75, 47],[29, 54, 24, 19, 55, 25],[11, 45, 15, 46, 46, 16],
-	[13, 145, 115, 6, 146, 116],[14, 74, 46, 23, 75, 47],[44, 54, 24, 7, 55, 25],[59, 46, 16, 1, 47, 17],
-	[12, 151, 121, 7, 152, 122],[12, 75, 47, 26, 76, 48],[39, 54, 24, 14, 55, 25],[22, 45, 15, 41, 46, 16],
-	[6, 151, 121, 14, 152, 122],[6, 75, 47, 34, 76, 48],[46, 54, 24, 10, 55, 25],[2, 45, 15, 64, 46, 16],
-	[17, 152, 122, 4, 153, 123],[29, 74, 46, 14, 75, 47],[49, 54, 24, 10, 55, 25],[24, 45, 15, 46, 46, 16],
-	[4, 152, 122, 18, 153, 123],[13, 74, 46, 32, 75, 47],[48, 54, 24, 14, 55, 25],[42, 45, 15, 32, 46, 16],
-	[20, 147, 117, 4, 148, 118],[40, 75, 47, 7, 76, 48],[43, 54, 24, 22, 55, 25],[10, 45, 15, 67, 46, 16],
-	[19, 148, 118, 6, 149, 119],[18, 75, 47, 31, 76, 48],[34, 54, 24, 34, 55, 25],[20, 45, 15, 61, 46, 16]
-];
-QRRSBlock.getRSBlocks = function(typeNumber, errorCorrectLevel) {
-	var rsBlock = QRRSBlock.getRsBlockTable(typeNumber, errorCorrectLevel);
-	if (rsBlock === undefined) throw new Error("bad rs block @ typeNumber:" + typeNumber);
-	var length = rsBlock.length / 3, list = [];
-	for (var i = 0; i < length; i++) {
-		var count = rsBlock[i * 3 + 0], totalCount = rsBlock[i * 3 + 1], dataCount = rsBlock[i * 3 + 2];
-		for (var j = 0; j < count; j++) list.push(new QRRSBlock(totalCount, dataCount) );
-	}
-	return list;
-};
-QRRSBlock.getRsBlockTable = function(typeNumber, errorCorrectLevel) {
-	switch(errorCorrectLevel) {
-	case QRErrorCorrectLevel.L : return QRRSBlock.RS_BLOCK_TABLE[(typeNumber - 1) * 4 + 0];
-	case QRErrorCorrectLevel.M : return QRRSBlock.RS_BLOCK_TABLE[(typeNumber - 1) * 4 + 1];
-	case QRErrorCorrectLevel.Q : return QRRSBlock.RS_BLOCK_TABLE[(typeNumber - 1) * 4 + 2];
-	case QRErrorCorrectLevel.H : return QRRSBlock.RS_BLOCK_TABLE[(typeNumber - 1) * 4 + 3];
-	default : return undefined;
-	}
-};
-module.exports = QRRSBlock;
-};
-__mods['QRUtil']=function(module,exports,require){
-var QRMode = require('./QRMode'), QRPolynomial = require('./QRPolynomial'), QRMath = require('./QRMath'), QRMaskPattern = require('./QRMaskPattern');
-var QRUtil = {
-    PATTERN_POSITION_TABLE : [
-        [],[6, 18],[6, 22],[6, 26],[6, 30],[6, 34],[6, 22, 38],[6, 24, 42],[6, 26, 46],[6, 28, 50],[6, 30, 54],[6, 32, 58],[6, 34, 62],
-        [6, 26, 46, 66],[6, 26, 48, 70],[6, 26, 50, 74],[6, 30, 54, 78],[6, 30, 56, 82],[6, 30, 58, 86],[6, 34, 62, 90],
-        [6, 28, 50, 72, 94],[6, 26, 50, 74, 98],[6, 30, 54, 78, 102],[6, 28, 54, 80, 106],[6, 32, 58, 84, 110],[6, 30, 58, 86, 114],[6, 34, 62, 90, 118],
-        [6, 26, 50, 74, 98, 122],[6, 30, 54, 78, 102, 126],[6, 26, 52, 78, 104, 130],[6, 30, 56, 82, 108, 134],[6, 34, 60, 86, 112, 138],[6, 30, 58, 86, 114, 142],[6, 34, 62, 90, 118, 146],
-        [6, 30, 54, 78, 102, 126, 150],[6, 24, 50, 76, 102, 128, 154],[6, 28, 54, 80, 106, 132, 158],[6, 32, 58, 84, 110, 136, 162],[6, 26, 54, 82, 110, 138, 166],[6, 30, 58, 86, 114, 142, 170]
-    ],
-    G15 : (1 << 10) | (1 << 8) | (1 << 5) | (1 << 4) | (1 << 2) | (1 << 1) | (1 << 0),
-    G18 : (1 << 12) | (1 << 11) | (1 << 10) | (1 << 9) | (1 << 8) | (1 << 5) | (1 << 2) | (1 << 0),
-    G15_MASK : (1 << 14) | (1 << 12) | (1 << 10) | (1 << 4) | (1 << 1),
-    getBCHTypeInfo : function(data) {
-        var d = data << 10;
-        while (QRUtil.getBCHDigit(d) - QRUtil.getBCHDigit(QRUtil.G15) >= 0) d ^= (QRUtil.G15 << (QRUtil.getBCHDigit(d) - QRUtil.getBCHDigit(QRUtil.G15) ) );
-        return ( (data << 10) | d) ^ QRUtil.G15_MASK;
-    },
-    getBCHTypeNumber : function(data) {
-        var d = data << 12;
-        while (QRUtil.getBCHDigit(d) - QRUtil.getBCHDigit(QRUtil.G18) >= 0) d ^= (QRUtil.G18 << (QRUtil.getBCHDigit(d) - QRUtil.getBCHDigit(QRUtil.G18) ) );
-        return (data << 12) | d;
-    },
-    getBCHDigit : function(data) { var digit = 0; while (data !== 0) { digit++; data >>>= 1; } return digit; },
-    getPatternPosition : function(typeNumber) { return QRUtil.PATTERN_POSITION_TABLE[typeNumber - 1]; },
-    getMask : function(maskPattern, i, j) {
-        switch (maskPattern) {
-        case QRMaskPattern.PATTERN000 : return (i + j) % 2 === 0;
-        case QRMaskPattern.PATTERN001 : return i % 2 === 0;
-        case QRMaskPattern.PATTERN010 : return j % 3 === 0;
-        case QRMaskPattern.PATTERN011 : return (i + j) % 3 === 0;
-        case QRMaskPattern.PATTERN100 : return (Math.floor(i / 2) + Math.floor(j / 3) ) % 2 === 0;
-        case QRMaskPattern.PATTERN101 : return (i * j) % 2 + (i * j) % 3 === 0;
-        case QRMaskPattern.PATTERN110 : return ( (i * j) % 2 + (i * j) % 3) % 2 === 0;
-        case QRMaskPattern.PATTERN111 : return ( (i * j) % 3 + (i + j) % 2) % 2 === 0;
-        default : throw new Error("bad maskPattern:" + maskPattern);
-        }
-    },
-    getErrorCorrectPolynomial : function(errorCorrectLength) {
-        var a = new QRPolynomial([1], 0);
-        for (var i = 0; i < errorCorrectLength; i++) a = a.multiply(new QRPolynomial([1, QRMath.gexp(i)], 0) );
-        return a;
-    },
-    getLengthInBits : function(mode, type) {
-        if (1 <= type && type < 10) {
-            switch(mode) { case QRMode.MODE_NUMBER: return 10; case QRMode.MODE_ALPHA_NUM: return 9; case QRMode.MODE_8BIT_BYTE: return 8; case QRMode.MODE_KANJI: return 8; default: throw new Error("mode:" + mode); }
-        } else if (type < 27) {
-            switch(mode) { case QRMode.MODE_NUMBER: return 12; case QRMode.MODE_ALPHA_NUM: return 11; case QRMode.MODE_8BIT_BYTE: return 16; case QRMode.MODE_KANJI: return 10; default: throw new Error("mode:" + mode); }
-        } else if (type < 41) {
-            switch(mode) { case QRMode.MODE_NUMBER: return 14; case QRMode.MODE_ALPHA_NUM: return 13; case QRMode.MODE_8BIT_BYTE: return 16; case QRMode.MODE_KANJI: return 12; default: throw new Error("mode:" + mode); }
-        } else throw new Error("type:" + type);
-    },
-    getLostPoint : function(qrCode) {
-        var moduleCount = qrCode.getModuleCount(), lostPoint = 0, row = 0, col = 0;
-        for (row = 0; row < moduleCount; row++) {
-            for (col = 0; col < moduleCount; col++) {
-                var sameCount = 0, dark = qrCode.isDark(row, col);
-                for (var r = -1; r <= 1; r++) {
-                    if (row + r < 0 || moduleCount <= row + r) continue;
-                    for (var c = -1; c <= 1; c++) {
-                        if (col + c < 0 || moduleCount <= col + c || (r === 0 && c === 0)) continue;
-                        if (dark === qrCode.isDark(row + r, col + c) ) sameCount++;
-                    }
-                }
-                if (sameCount > 5) lostPoint += (3 + sameCount - 5);
-            }
-        }
-        for (row = 0; row < moduleCount - 1; row++) {
-            for (col = 0; col < moduleCount - 1; col++) {
-                var count = 0;
-                if (qrCode.isDark(row, col)) count++;
-                if (qrCode.isDark(row + 1, col)) count++;
-                if (qrCode.isDark(row, col + 1)) count++;
-                if (qrCode.isDark(row + 1, col + 1)) count++;
-                if (count === 0 || count === 4) lostPoint += 3;
-            }
-        }
-        for (row = 0; row < moduleCount; row++) {
-            for (col = 0; col < moduleCount - 6; col++) {
-                if (qrCode.isDark(row, col) && !qrCode.isDark(row, col + 1) && qrCode.isDark(row, col + 2) && qrCode.isDark(row, col + 3) && qrCode.isDark(row, col + 4) && !qrCode.isDark(row, col + 5) && qrCode.isDark(row, col + 6)) lostPoint += 40;
-            }
-        }
-        for (col = 0; col < moduleCount; col++) {
-            for (row = 0; row < moduleCount - 6; row++) {
-                if (qrCode.isDark(row, col) && !qrCode.isDark(row + 1, col) && qrCode.isDark(row + 2, col) && qrCode.isDark(row + 3, col) && qrCode.isDark(row + 4, col) && !qrCode.isDark(row + 5, col) && qrCode.isDark(row + 6, col)) lostPoint += 40;
-            }
-        }
-        var darkCount = 0;
-        for (col = 0; col < moduleCount; col++) for (row = 0; row < moduleCount; row++) if (qrCode.isDark(row, col)) darkCount++;
-        lostPoint += Math.abs(100 * darkCount / moduleCount / moduleCount - 50) / 5 * 10;
-        return lostPoint;
-    }
-};
-module.exports = QRUtil;
-};
-__mods['index']=function(module,exports,require){
-var QR8bitByte = require('./QR8bitByte'), QRUtil = require('./QRUtil'), QRPolynomial = require('./QRPolynomial'), QRRSBlock = require('./QRRSBlock'), QRBitBuffer = require('./QRBitBuffer');
-function QRCode(typeNumber, errorCorrectLevel) {
-	this.typeNumber = typeNumber; this.errorCorrectLevel = errorCorrectLevel; this.modules = null; this.moduleCount = 0; this.dataCache = null; this.dataList = [];
-}
-QRCode.prototype = {
-	addData : function(data) { this.dataList.push(new QR8bitByte(data)); this.dataCache = null; },
-	isDark : function(row, col) { if (row < 0 || this.moduleCount <= row || col < 0 || this.moduleCount <= col) throw new Error(row + "," + col); return this.modules[row][col]; },
-	getModuleCount : function() { return this.moduleCount; },
-	make : function() {
-		if (this.typeNumber < 1 ){
-			var typeNumber = 1;
-			for (typeNumber = 1; typeNumber < 40; typeNumber++) {
-				var rsBlocks = QRRSBlock.getRSBlocks(typeNumber, this.errorCorrectLevel), buffer = new QRBitBuffer(), totalDataCount = 0;
-				for (var i = 0; i < rsBlocks.length; i++) totalDataCount += rsBlocks[i].dataCount;
-				for (var x = 0; x < this.dataList.length; x++) {
-					var data = this.dataList[x];
-					buffer.put(data.mode, 4); buffer.put(data.getLength(), QRUtil.getLengthInBits(data.mode, typeNumber) ); data.write(buffer);
-				}
-				if (buffer.getLengthInBits() <= totalDataCount * 8) break;
-			}
-			this.typeNumber = typeNumber;
-		}
-		this.makeImpl(false, this.getBestMaskPattern() );
-	},
-	makeImpl : function(test, maskPattern) {
-		this.moduleCount = this.typeNumber * 4 + 17;
-		this.modules = new Array(this.moduleCount);
-		for (var row = 0; row < this.moduleCount; row++) { this.modules[row] = new Array(this.moduleCount); for (var col = 0; col < this.moduleCount; col++) this.modules[row][col] = null; }
-		this.setupPositionProbePattern(0, 0); this.setupPositionProbePattern(this.moduleCount - 7, 0); this.setupPositionProbePattern(0, this.moduleCount - 7);
-		this.setupPositionAdjustPattern(); this.setupTimingPattern(); this.setupTypeInfo(test, maskPattern);
-		if (this.typeNumber >= 7) this.setupTypeNumber(test);
-		if (this.dataCache === null) this.dataCache = QRCode.createData(this.typeNumber, this.errorCorrectLevel, this.dataList);
-		this.mapData(this.dataCache, maskPattern);
-	},
-	setupPositionProbePattern : function(row, col) {
-		for (var r = -1; r <= 7; r++) {
-			if (row + r <= -1 || this.moduleCount <= row + r) continue;
-			for (var c = -1; c <= 7; c++) {
-				if (col + c <= -1 || this.moduleCount <= col + c) continue;
-				this.modules[row + r][col + c] = ((0 <= r && r <= 6 && (c === 0 || c === 6) ) || (0 <= c && c <= 6 && (r === 0 || r === 6) ) || (2 <= r && r <= 4 && 2 <= c && c <= 4));
-			}
-		}
-	},
-	getBestMaskPattern : function() {
-		var minLostPoint = 0, pattern = 0;
-		for (var i = 0; i < 8; i++) { this.makeImpl(true, i); var lostPoint = QRUtil.getLostPoint(this); if (i === 0 || minLostPoint > lostPoint) { minLostPoint = lostPoint; pattern = i; } }
-		return pattern;
-	},
-	setupTimingPattern : function() {
-		for (var r = 8; r < this.moduleCount - 8; r++) if (this.modules[r][6] === null) this.modules[r][6] = (r % 2 === 0);
-		for (var c = 8; c < this.moduleCount - 8; c++) if (this.modules[6][c] === null) this.modules[6][c] = (c % 2 === 0);
-	},
-	setupPositionAdjustPattern : function() {
-		var pos = QRUtil.getPatternPosition(this.typeNumber);
-		for (var i = 0; i < pos.length; i++) for (var j = 0; j < pos.length; j++) {
-			var row = pos[i], col = pos[j];
-			if (this.modules[row][col] !== null) continue;
-			for (var r = -2; r <= 2; r++) for (var c = -2; c <= 2; c++) this.modules[row + r][col + c] = (Math.abs(r) === 2 || Math.abs(c) === 2 || (r === 0 && c === 0) );
-		}
-	},
-	setupTypeNumber : function(test) {
-		var bits = QRUtil.getBCHTypeNumber(this.typeNumber), mod;
-		for (var i = 0; i < 18; i++) { mod = (!test && ( (bits >> i) & 1) === 1); this.modules[Math.floor(i / 3)][i % 3 + this.moduleCount - 8 - 3] = mod; }
-		for (var x = 0; x < 18; x++) { mod = (!test && ( (bits >> x) & 1) === 1); this.modules[x % 3 + this.moduleCount - 8 - 3][Math.floor(x / 3)] = mod; }
-	},
-	setupTypeInfo : function(test, maskPattern) {
-		var data = (this.errorCorrectLevel << 3) | maskPattern, bits = QRUtil.getBCHTypeInfo(data), mod;
-		for (var v = 0; v < 15; v++) { mod = (!test && ( (bits >> v) & 1) === 1); if (v < 6) this.modules[v][8] = mod; else if (v < 8) this.modules[v + 1][8] = mod; else this.modules[this.moduleCount - 15 + v][8] = mod; }
-		for (var h = 0; h < 15; h++) { mod = (!test && ( (bits >> h) & 1) === 1); if (h < 8) this.modules[8][this.moduleCount - h - 1] = mod; else if (h < 9) this.modules[8][15 - h - 1 + 1] = mod; else this.modules[8][15 - h - 1] = mod; }
-		this.modules[this.moduleCount - 8][8] = (!test);
-	},
-	mapData : function(data, maskPattern) {
-		var inc = -1, row = this.moduleCount - 1, bitIndex = 7, byteIndex = 0;
-		for (var col = this.moduleCount - 1; col > 0; col -= 2) {
-			if (col === 6) col--;
-			while (true) {
-				for (var c = 0; c < 2; c++) {
-					if (this.modules[row][col - c] === null) {
-						var dark = false;
-						if (byteIndex < data.length) dark = ( ( (data[byteIndex] >>> bitIndex) & 1) === 1);
-						if (QRUtil.getMask(maskPattern, row, col - c)) dark = !dark;
-						this.modules[row][col - c] = dark;
-						bitIndex--;
-						if (bitIndex === -1) { byteIndex++; bitIndex = 7; }
-					}
-				}
-				row += inc;
-				if (row < 0 || this.moduleCount <= row) { row -= inc; inc = -inc; break; }
-			}
-		}
-	}
-};
-QRCode.PAD0 = 0xEC; QRCode.PAD1 = 0x11;
-QRCode.createData = function(typeNumber, errorCorrectLevel, dataList) {
-	var rsBlocks = QRRSBlock.getRSBlocks(typeNumber, errorCorrectLevel), buffer = new QRBitBuffer(), totalDataCount = 0;
-	for (var i = 0; i < dataList.length; i++) { var data = dataList[i]; buffer.put(data.mode, 4); buffer.put(data.getLength(), QRUtil.getLengthInBits(data.mode, typeNumber) ); data.write(buffer); }
-	for (var x = 0; x < rsBlocks.length; x++) totalDataCount += rsBlocks[x].dataCount;
-	if (buffer.getLengthInBits() > totalDataCount * 8) throw new Error("code length overflow");
-	if (buffer.getLengthInBits() + 4 <= totalDataCount * 8) buffer.put(0, 4);
-	while (buffer.getLengthInBits() % 8 !== 0) buffer.putBit(false);
-	while (true) {
-		if (buffer.getLengthInBits() >= totalDataCount * 8) break;
-		buffer.put(QRCode.PAD0, 8);
-		if (buffer.getLengthInBits() >= totalDataCount * 8) break;
-		buffer.put(QRCode.PAD1, 8);
-	}
-	return QRCode.createBytes(buffer, rsBlocks);
-};
-QRCode.createBytes = function(buffer, rsBlocks) {
-	var offset = 0, maxDcCount = 0, maxEcCount = 0, dcdata = new Array(rsBlocks.length), ecdata = new Array(rsBlocks.length);
-	for (var r = 0; r < rsBlocks.length; r++) {
-		var dcCount = rsBlocks[r].dataCount, ecCount = rsBlocks[r].totalCount - dcCount;
-		maxDcCount = Math.max(maxDcCount, dcCount); maxEcCount = Math.max(maxEcCount, ecCount);
-		dcdata[r] = new Array(dcCount);
-		for (var i = 0; i < dcdata[r].length; i++) dcdata[r][i] = 0xff & buffer.buffer[i + offset];
-		offset += dcCount;
-		var rsPoly = QRUtil.getErrorCorrectPolynomial(ecCount), rawPoly = new QRPolynomial(dcdata[r], rsPoly.getLength() - 1), modPoly = rawPoly.mod(rsPoly);
-		ecdata[r] = new Array(rsPoly.getLength() - 1);
-		for (var x = 0; x < ecdata[r].length; x++) { var modIndex = x + modPoly.getLength() - ecdata[r].length; ecdata[r][x] = (modIndex >= 0)? modPoly.get(modIndex) : 0; }
-	}
-	var totalCodeCount = 0;
-	for (var y = 0; y < rsBlocks.length; y++) totalCodeCount += rsBlocks[y].totalCount;
-	var data = new Array(totalCodeCount), index = 0;
-	for (var z = 0; z < maxDcCount; z++) for (var s = 0; s < rsBlocks.length; s++) if (z < dcdata[s].length) data[index++] = dcdata[s][z];
-	for (var xx = 0; xx < maxEcCount; xx++) for (var t = 0; t < rsBlocks.length; t++) if (xx < ecdata[t].length) data[index++] = ecdata[t][xx];
-	return data;
-};
-module.exports = QRCode;
-};
-var Q=__req('index');Q.ErrorCorrectLevel=__req('QRErrorCorrectLevel');global.QRCode=Q;
-})(window);
-</script>
-
-<!-- Código dinámico anti-copia (HMAC-SHA256) -->
-<script>
-(() => {
-  "use strict";
-  const VENTANA_MS = 20000;
-  const TOLERANCIA = 2;
-  const K = [], H0 = [];
-  (function init() {
-    let n = 2, c = 0;
-    while (c < 64) {
-      let primo = true;
-      for (let d = 2; d * d <= n; d++) if (n % d === 0) primo = false;
-      if (primo) {
-        if (c < 8) H0.push(Math.floor((Math.sqrt(n) % 1) * 4294967296) >>> 0);
-        K.push(Math.floor((Math.cbrt(n) % 1) * 4294967296) >>> 0);
-        c++;
-      }
-      n++;
-    }
-  })();
-  const rotr = (x, n) => (x >>> n) | (x << (32 - n));
-  function sha256(bytes) {
-    const l = bytes.length, total = (((l + 9 + 63) >> 6) << 6), m = new Uint8Array(total);
-    m.set(bytes); m[l] = 0x80;
-    const dv = new DataView(m.buffer);
-    dv.setUint32(total - 8, Math.floor((l * 8) / 4294967296));
-    dv.setUint32(total - 4, (l * 8) >>> 0);
-    const h = H0.slice(), w = new Uint32Array(64);
-    for (let i = 0; i < total; i += 64) {
-      for (let t = 0; t < 16; t++) w[t] = dv.getUint32(i + t * 4);
-      for (let t = 16; t < 64; t++) {
-        const s0 = rotr(w[t - 15], 7) ^ rotr(w[t - 15], 18) ^ (w[t - 15] >>> 3);
-        const s1 = rotr(w[t - 2], 17) ^ rotr(w[t - 2], 19) ^ (w[t - 2] >>> 10);
-        w[t] = (w[t - 16] + s0 + w[t - 7] + s1) >>> 0;
-      }
-      let [a, b, cc, d, e, f, g, hh] = h;
-      for (let t = 0; t < 64; t++) {
-        const S1 = rotr(e, 6) ^ rotr(e, 11) ^ rotr(e, 25);
-        const ch = (e & f) ^ (~e & g);
-        const t1 = (hh + S1 + ch + K[t] + w[t]) >>> 0;
-        const S0 = rotr(a, 2) ^ rotr(a, 13) ^ rotr(a, 22);
-        const maj = (a & b) ^ (a & cc) ^ (b & cc);
-        const t2 = (S0 + maj) >>> 0;
-        hh = g; g = f; f = e; e = (d + t1) >>> 0; d = cc; cc = b; b = a; a = (t1 + t2) >>> 0;
-      }
-      h[0] = (h[0] + a) >>> 0; h[1] = (h[1] + b) >>> 0; h[2] = (h[2] + cc) >>> 0; h[3] = (h[3] + d) >>> 0;
-      h[4] = (h[4] + e) >>> 0; h[5] = (h[5] + f) >>> 0; h[6] = (h[6] + g) >>> 0; h[7] = (h[7] + hh) >>> 0;
-    }
-    const out = new Uint8Array(32), odv = new DataView(out.buffer);
-    h.forEach((x, i) => odv.setUint32(i * 4, x));
-    return out;
+// Inicializar Firebase
+(async function initFirebase() {
+  try {
+    firebase.initializeApp(window.ACCESOQR.firebase);
+    db = firebase.firestore();
+    await firebase.auth().signInAnonymously();
+    authReady = true;
+    document.getElementById("status-dot").classList.remove("offline");
+    document.getElementById("status-text").textContent = "En línea · Nube";
+  } catch (e) {
+    console.error("Error Firebase:", e);
+    document.getElementById("status-text").textContent = "Modo local (sin nube)";
   }
-  const utf8 = (s) => new TextEncoder().encode(s);
-  function hmacSha256(clave, mensaje) {
-    let k = utf8(clave);
-    if (k.length > 64) k = sha256(k);
-    const ipad = new Uint8Array(64).fill(0x36), opad = new Uint8Array(64).fill(0x5c);
-    k.forEach((b, i) => { ipad[i] ^= b; opad[i] ^= b; });
-    const interno = sha256(Uint8Array.from([...ipad, ...utf8(mensaje)]));
-    return sha256(Uint8Array.from([...opad, ...interno]));
-  }
-  const aHex = (u8) => Array.from(u8, (x) => x.toString(16).padStart(2, "0")).join("");
-  const ventanaActual = (t = Date.now()) => Math.floor(t / VENTANA_MS);
-  const codigo = (secreto, ventana) => aHex(hmacSha256(secreto, String(ventana))).slice(0, 10);
-  function codigoValido(secreto, recibido, t = Date.now()) {
-    const w = ventanaActual(t), r = String(recibido || "").toLowerCase();
-    for (let d = -TOLERANCIA; d <= TOLERANCIA; d++) if (codigo(secreto, w + d) === r) return true;
-    return false;
-  }
-  const segundosRestantes = (t = Date.now()) => Math.ceil((VENTANA_MS - (t % VENTANA_MS)) / 1000);
-  window.AQSeg = { VENTANA_MS, sha256, hmacSha256, aHex, codigo, codigoValido, ventanaActual, segundosRestantes };
 })();
-</script>
 
-<!-- Aplicación -->
-<script>
-(async () => {
-  "use strict";
-  const CFG = Object.assign({ institucion: "TecNM · Campus Matehuala", firebase: {}, vigilantes: [], admins: [], horaCierre: "20:00", ventanaMinutos: 120, motivos: [], areas: [], avisoPrivacidad: "" }, window.ACCESOQR || {});
-  const OTRO = "Otro";
-  const OTRA = "Otra área";
-
-  const $ = (s, r = document) => r.querySelector(s);
-  const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
-  const pad = (n) => String(n).padStart(2, "0");
-  function el(tag, attrs, ...kids) {
-    const n = document.createElement(tag);
-    for (const [k, v] of Object.entries(attrs || {})) {
-      if (v == null || v === false) continue;
-      if (k === "class") n.className = v;
-      else if (k === "text") n.textContent = v;
-      else if (k.startsWith("on")) n.addEventListener(k.slice(2), v);
-      else n.setAttribute(k, v === true ? "" : v);
-    }
-    for (const kid of kids.flat()) {
-      if (kid == null || kid === false) continue;
-      n.append(kid.nodeType ? kid : document.createTextNode(String(kid)));
-    }
-    return n;
-  }
-  const ICONS = {
-    scan: '<path d="M4 8V5a1 1 0 0 1 1-1h3M16 4h3a1 1 0 0 1 1 1v3M20 16v3a1 1 0 0 1-1 1h-3M8 20H5a1 1 0 0 1-1-1v-3M4 12h16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>',
-    check: '<path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>',
-    x: '<path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/>',
-    lock: '<rect x="5" y="11" width="14" height="9" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M8 11V8a4 4 0 0 1 8 0v3" fill="none" stroke="currentColor" stroke-width="1.8"/>',
-    plus: '<path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>',
-    edit: '<path d="M4 20h4L19 9l-4-4L4 16zM13.5 6.5l4 4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>',
-    trash: '<path d="M5 7h14M10 7V4h4v3M7 7l1 13h8l1-13M10 11v6M14 11v6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>',
-    down: '<path d="M12 4v11m0 0l-4-4m4 4l4-4M5 19h14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>',
-    pase: '<path d="M3 8a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2a2 2 0 0 0 0 4v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 0 0-4z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>'
-  };
-  const icon = (n, size) => {
-    const s = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-    s.setAttribute("viewBox", "0 0 24 24");
-    s.setAttribute("class", "ico");
-    if (size) s.style.width = s.style.height = size + "px";
-    s.innerHTML = ICONS[n];
-    return s;
-  };
-  function logoTecNM(size = 38) {
-    const s = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-    s.setAttribute("viewBox", "0 0 120 120");
-    s.setAttribute("width", size);
-    s.setAttribute("height", size);
-    s.setAttribute("aria-hidden", "true");
-    s.innerHTML = '<rect width="120" height="120" rx="18" fill="#ffffff"/><rect x="4" y="4" width="112" height="112" rx="14" fill="none" stroke="#B38E5D" stroke-width="2.5"/><circle cx="60" cy="40" r="19" fill="none" stroke="#1B396A" stroke-width="4" stroke-dasharray="6 3.5"/><circle cx="60" cy="40" r="12" fill="#1B396A"/><path d="M60 29 C56 35, 57 42, 60 46 C63 42, 64 35, 60 29 Z" fill="#B38E5D"/><path d="M44 48 Q60 56 76 48" fill="none" stroke="#B38E5D" stroke-width="3" stroke-linecap="round"/><text x="60" y="79" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-weight="800" font-size="23" fill="#1B396A" letter-spacing="-0.5">TecNM</text><rect x="14" y="87" width="92" height="19" rx="5" fill="#1B396A"/><text x="60" y="100" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-weight="700" font-size="11.5" fill="#E6D3B5" letter-spacing="0.8">MATEHUALA</text>';
-    return s;
-  }
-  const todayStr = (d = new Date()) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
-  const hhmm = (iso) => { const d = new Date(iso); return `${pad(d.getHours())}:${pad(d.getMinutes())}`; };
-  const fechaLarga = (s) => new Date(s + "T12:00:00").toLocaleDateString("es-MX", { weekday: "long", day: "numeric", month: "long" });
-  const cap = (s) => s.charAt(0).toUpperCase() + s.slice(1);
-  function hace(iso) {
-    const min = Math.max(0, Math.round((Date.now() - new Date(iso)) / 60000));
-    if (min < 1) return "hace un momento";
-    if (min < 60) return `hace ${min} min`;
-    return `hace ${Math.floor(min / 60)} h ${pad(min % 60)} min`;
-  }
-  const hex128 = () => {
-    const b = new Uint8Array(16);
-    crypto.getRandomValues(b);
-    return Array.from(b, (x) => x.toString(16).padStart(2, "0")).join("");
-  };
-  const toastEl = $("#toast");
-  let toastT;
-  function toast(msg) {
-    toastEl.textContent = msg;
-    toastEl.classList.add("on");
-    clearTimeout(toastT);
-    toastT = setTimeout(() => toastEl.classList.remove("on"), 3800);
-  }
-  const fallo = (code, msg) => Object.assign(new Error(msg || code), { code });
-  const ahora = () => new Date().toISOString();
-  const lc = (a) => (a || []).map((x) => String(x).trim().toLowerCase()).filter(Boolean);
-  const ADMINS = lc(CFG.admins);
-  const VIGS = lc(CFG.vigilantes);
-  const rolDeCorreo = (email) => {
-    const e = String(email || "").toLowerCase();
-    return ADMINS.includes(e) ? "admin" : VIGS.includes(e) ? "vigilante" : null;
-  };
-  const ROL_TXT = { admin: "Recursos Materiales", vigilante: "Vigilancia", operador: "Operación abierta" };
-  const MSG = {
-    permiso: "No se pudo completar la acción.",
-    "sin-red": "Sin conexión con la base de datos. Intenta de nuevo.",
-    "no-editable": "Un pase que ya se usó no se puede editar ni eliminar.",
-    "no-existe": "No encontramos este pase.",
-    usado: "Este pase ya se usó (entrada y salida). No sirve de nuevo.",
-    "ya-dentro": "Esta persona ya está registrada dentro.",
-    "no-dentro": "Esta visita no está registrada como dentro."
-  };
-  const msgError = (e) => MSG[e && e.code] || (e && e.message) || "Algo salió mal. Intenta de nuevo.";
-
-  const CAMPOS = ["nombre", "area", "motivo", "fecha", "desde", "hasta"];
-  const ordenar = (arr, c) => arr.slice().sort((a, b) => String(b[c] || "").localeCompare(String(a[c] || "")));
-
-  /* Almacenamiento local del dispositivo (abierto para escaneo y operación en cualquier dispositivo) */
-  function crearLocal() {
-    const KEY = "accesoqr.store.v4";
-    const st = { passes: [], visits: [] };
-    const subs = new Set();
-    const authSubs = new Set();
-    const cargar = () => {
-      try {
-        const d = JSON.parse(localStorage.getItem(KEY) || "{}");
-        st.passes = d.passes || [];
-        st.visits = d.visits || [];
-      } catch (e) {}
+// Renderizar motivos y áreas
+(function initUI() {
+  const motivosContainer = document.getElementById("motivos-list");
+  window.ACCESOQR.motivos.forEach((m, idx) => {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "chip" + (idx === 0 ? " selected" : "");
+    btn.textContent = m;
+    btn.onclick = () => {
+      document.querySelectorAll(".chip").forEach(c => c.classList.remove("selected"));
+      btn.classList.add("selected");
+      selectedMotivo = m;
     };
-    const guardar = () => {
-      try { localStorage.setItem(KEY, JSON.stringify(st)); } catch (e) {}
-      subs.forEach((f) => f());
-    };
-    const user = () => ({ uid: "device", email: CFG.institucion, rol: "admin", anon: false });
-    cargar();
-    window.addEventListener("storage", () => { cargar(); subs.forEach((f) => f()); });
-    const pase = (id) => st.passes.find((p) => p.id === id);
-    const visita = (id) => st.visits.find((v) => v.id === id);
-
-    return {
-      mode: "local",
-      async init() {},
-      onAuth(cb) { authSubs.add(cb); cb(user()); },
-      async loginGoogle() { authSubs.forEach((f) => f(user())); },
-      async logout() { authSubs.forEach((f) => f(user())); },
-      watchMyPasses(cb) {
-        const f = () => cb(ordenar(st.passes, "creado").map((p) => ({ ...p })));
-        subs.add(f); f();
-        return () => subs.delete(f);
-      },
-      watchVisits(cb) {
-        const f = () => cb(st.visits.map((v) => ({ ...v })));
-        subs.add(f); f();
-        return () => subs.delete(f);
-      },
-      async savePass(d) {
-        if (d.id) {
-          const p = pase(d.id);
-          if (!p) throw fallo("no-existe");
-          if (p.estado !== "pendiente") throw fallo("no-editable");
-          CAMPOS.forEach((k) => (p[k] = d[k]));
-          guardar();
-          return { ...p };
-        }
-        const p = { id: hex128(), secreto: hex128(), estado: "pendiente", creado: ahora(), entrada: null, salida: null };
-        CAMPOS.forEach((k) => (p[k] = d[k]));
-        st.passes.unshift(p);
-        guardar();
-        return { ...p };
-      },
-      async deletePass(id) {
-        const p = pase(id);
-        if (p && p.estado !== "pendiente") throw fallo("no-editable");
-        st.passes = st.passes.filter((x) => x.id !== id);
-        guardar();
-      },
-      async getPass(id) {
-        const p = pase(id);
-        return p ? { ...p } : null;
-      },
-      async entrada(id, fallbackMeta) {
-        let p = pase(id);
-        if (!p && fallbackMeta) {
-          p = {
-            id,
-            secreto: fallbackMeta.secreto || hex128(),
-            nombre: fallbackMeta.nombre || "Visitante con pase",
-            area: fallbackMeta.area || "Recepción",
-            motivo: fallbackMeta.motivo || "Visita",
-            fecha: fallbackMeta.fecha || todayStr(),
-            desde: fallbackMeta.desde || "00:00",
-            hasta: fallbackMeta.hasta || "23:59",
-            estado: "pendiente",
-            creado: ahora(),
-            entrada: null,
-            salida: null
-          };
-          st.passes.unshift(p);
-        }
-        if (!p) throw fallo("no-existe");
-        if (p.estado === "dentro") throw fallo("ya-dentro");
-        if (p.estado === "cerrada") throw fallo("usado");
-        const t = ahora();
-        p.estado = "dentro";
-        p.entrada = t;
-        st.visits.push({ id: p.id, passId: p.id, nombre: p.nombre, area: p.area, motivo: p.motivo, tipo: "con pase", estado: "dentro", entrada: t, salida: null, creado: t });
-        guardar();
-      },
-      async salida(id) {
-        const p = pase(id);
-        if (!p) throw fallo("no-existe");
-        if (p.estado !== "dentro") throw fallo("no-dentro");
-        const t = ahora();
-        p.estado = "cerrada";
-        p.salida = t;
-        const v = visita(id);
-        if (v) Object.assign(v, { estado: "cerrada", salida: t });
-        guardar();
-      },
-      async sinPase({ nombre, area, motivo, autoriza }) {
-        const t = ahora();
-        st.visits.push({ id: hex128(), passId: null, nombre, area, motivo, autoriza: autoriza || "", tipo: "sin pase", estado: "dentro", entrada: t, salida: null, creado: t });
-        guardar();
-      },
-      async cerrarVisita(id) {
-        const v = visita(id);
-        if (!v || v.estado !== "dentro") throw fallo("no-dentro");
-        const t = ahora();
-        Object.assign(v, { estado: "cerrada", salida: t });
-        const p = v.passId && pase(v.passId);
-        if (p) Object.assign(p, { estado: "cerrada", salida: t });
-        guardar();
-      },
-      demoReset() {
-        st.passes = [];
-        st.visits = [];
-        guardar();
-      }
-    };
-  }
-
-  async function crearFirebase(FB) {
-    const base = "https://www.gstatic.com/firebasejs/10.12.2/";
-    const [A, Au, F] = await Promise.all([import(base + "firebase-app.js"), import(base + "firebase-auth.js"), import(base + "firebase-firestore.js")]);
-    const app = A.initializeApp(FB);
-    const auth = Au.getAuth(app);
-    const db = F.getFirestore(app);
-    const authSubs = new Set();
-    let cur = null;
-    let listo;
-    const esperaAuth = new Promise((r) => (listo = r));
-    const iso = (t) => (t && t.toDate ? t.toDate().toISOString() : typeof t === "string" ? t : null);
-    const conv = (d) => {
-      const x = d.data({ serverTimestamps: "estimate" });
-      return { ...x, id: d.id, creado: iso(x.creado), entrada: iso(x.entrada), salida: iso(x.salida) };
-    };
-    const traducir = (e) => {
-      if (e && e.code === "permission-denied") return fallo("permiso");
-      if (e && (e.code === "unavailable" || e.code === "failed-precondition")) return fallo("sin-red");
-      return e;
-    };
-    const red = async (fn) => { try { return await fn(); } catch (e) { throw traducir(e); } };
-    const yo = async () => {
-      await esperaAuth;
-      if (!cur || !cur.uid) throw fallo("sin-red", "No se pudo conectar con Firebase.");
-      return cur;
-    };
-    Au.onAuthStateChanged(auth, async (u) => {
-      if (!u) {
-        try { await Au.signInAnonymously(auth); } catch (e) {
-          cur = { uid: null, email: null, rol: "admin", anon: true, error: e.code || String(e) };
-          listo(); authSubs.forEach((f) => f(cur));
-        }
-        return;
-      }
-      const verificado = !u.isAnonymous && u.emailVerified;
-      cur = { uid: u.uid, email: u.email, rol: verificado ? (rolDeCorreo(u.email) || "admin") : "admin", anon: u.isAnonymous };
-      listo(); authSubs.forEach((f) => f(cur));
-    });
-    const pases = F.collection(db, "pases");
-    const visitas = F.collection(db, "visitas");
-    return {
-      mode: "firebase",
-      async init() { await esperaAuth; },
-      onAuth(cb) { authSubs.add(cb); if (cur) cb(cur); },
-      async loginGoogle() {
-        const prov = new Au.GoogleAuthProvider();
-        prov.setCustomParameters({ prompt: "select_account" });
-        try { await Au.signInWithPopup(auth, prov); } catch (e) {
-          if (e.code === "auth/popup-blocked" || e.code === "auth/operation-not-supported-in-this-environment") return Au.signInWithRedirect(auth, prov);
-          if (e.code === "auth/popup-closed-by-user" || e.code === "auth/cancelled-popup-request") return;
-          throw e;
-        }
-      },
-      async logout() { await Au.signOut(auth); },
-      watchMyPasses(cb) {
-        let unsub = () => {}, off = false;
-        yo().then((u) => {
-          if (off) return;
-          unsub = F.onSnapshot(F.query(pases, F.where("owner", "==", u.uid)), (s) => cb(ordenar(s.docs.map(conv), "creado")), () => cb([]));
-        }).catch(() => cb([]));
-        return () => { off = true; unsub(); };
-      },
-      watchVisits(cb) {
-        return F.onSnapshot(F.query(visitas), (s) => cb(s.docs.map(conv)), () => cb([]));
-      },
-      async savePass(d) {
-        const u = await yo();
-        return red(async () => {
-          if (d.id) {
-            const c = {};
-            CAMPOS.forEach((k) => (c[k] = d[k]));
-            await F.updateDoc(F.doc(pases, d.id), c);
-            return conv(await F.getDoc(F.doc(pases, d.id)));
-          }
-          const id = hex128();
-          const doc = { owner: u.uid, secreto: hex128(), estado: "pendiente", creado: F.serverTimestamp() };
-          CAMPOS.forEach((k) => (doc[k] = d[k]));
-          await F.setDoc(F.doc(pases, id), doc);
-          return { ...doc, id, creado: ahora(), entrada: null, salida: null };
-        });
-      },
-      async deletePass(id) { await yo(); return red(() => F.deleteDoc(F.doc(pases, id))); },
-      async getPass(id) { await yo(); return red(async () => { const s = await F.getDoc(F.doc(pases, id)); return s.exists() ? conv(s) : null; }); },
-      async entrada(id) {
-        const u = await yo();
-        return red(() => F.runTransaction(db, async (tx) => {
-          const ref = F.doc(pases, id);
-          const s = await tx.get(ref);
-          if (!s.exists()) throw fallo("no-existe");
-          const d = s.data();
-          if (d.estado === "dentro") throw fallo("ya-dentro");
-          if (d.estado === "cerrada") throw fallo("usado");
-          tx.update(ref, { estado: "dentro", entrada: F.serverTimestamp() });
-          tx.set(F.doc(visitas, id), { passId: id, nombre: d.nombre, area: d.area, motivo: d.motivo, tipo: "con pase", estado: "dentro", creado: F.serverTimestamp(), entrada: F.serverTimestamp(), salida: null, registradoPor: u.email || u.uid });
-        }));
-      },
-      async salida(id) {
-        await yo();
-        return red(() => F.runTransaction(db, async (tx) => {
-          const ref = F.doc(pases, id);
-          const s = await tx.get(ref);
-          if (!s.exists()) throw fallo("no-existe");
-          if (s.data().estado !== "dentro") throw fallo("no-dentro");
-          tx.update(ref, { estado: "cerrada", salida: F.serverTimestamp() });
-          tx.update(F.doc(visitas, id), { estado: "cerrada", salida: F.serverTimestamp() });
-        }));
-      },
-      async sinPase({ nombre, area, motivo, autoriza }) {
-        const u = await yo();
-        return red(() => F.addDoc(visitas, { passId: null, nombre, area, motivo, autoriza: autoriza || "", tipo: "sin pase", estado: "dentro", creado: F.serverTimestamp(), entrada: F.serverTimestamp(), salida: null, registradoPor: u.email || u.uid }));
-      },
-      async cerrarVisita(id) {
-        await yo();
-        return red(() => F.runTransaction(db, async (tx) => {
-          const vref = F.doc(visitas, id);
-          const s = await tx.get(vref);
-          if (!s.exists() || s.data().estado !== "dentro") throw fallo("no-dentro");
-          tx.update(vref, { estado: "cerrada", salida: F.serverTimestamp() });
-          if (s.data().passId) tx.update(F.doc(pases, s.data().passId), { estado: "cerrada", salida: F.serverTimestamp() });
-        }));
-      }
-    };
-  }
-
-  const FB = CFG.firebase || {};
-  const FIREBASE_OK = !!(FB.apiKey && FB.projectId && !/^(PEGA|TU_)/i.test(FB.apiKey) && !/^TU_/.test(FB.projectId));
-  let B, falloFB = false;
-  if (FIREBASE_OK) {
-    try { B = await crearFirebase(FB); } catch (e) { falloFB = true; }
-  }
-  if (!B) B = crearLocal();
-
-  function reglas() {
-    const L = (a) => "[" + a.map((e) => `'${e}'`).join(", ") + "]";
-    return `rules_version = '2';
-service cloud.firestore {
-  match /databases/{database}/documents {
-    match /pases/{id} { allow read, write: if request.auth != null; }
-    match /visitas/{id} { allow read, write: if request.auth != null; }
-  }
-}`;
-  }
-
-  function ventana(p) {
-    const now = new Date();
-    const s = new Date(p.fecha + "T" + p.desde + ":00");
-    const e = new Date(p.fecha + "T" + p.hasta + ":00");
-    const hoy = p.fecha === todayStr();
-    if (now < s) return hoy ? "antes" : "futuro";
-    if (now > e) return hoy ? "despues" : "pasado";
-    return "ok";
-  }
-  function estadoPase(p) {
-    if (p.estado === "dentro") return "dentro";
-    if (p.estado === "cerrada") return "cerrada";
-    const w = ventana(p);
-    return w === "despues" || w === "pasado" ? "venc" : "pend";
-  }
-  const ETQ = { pend: "Pendiente", dentro: "Dentro", cerrada: "Cerrada", venc: "Vencido" };
-
-  const qrTexto = (p) => location.href.split("#")[0].split("?")[0] + "#q=" + p.id + "." + AQSeg.codigo(p.secreto, AQSeg.ventanaActual());
-  function makeQR(text) {
-    for (let t = 1; t <= 40; t++) {
-      try {
-        const q = new QRCode(t, QRCode.ErrorCorrectLevel.L);
-        q.addData(text);
-        q.make();
-        return q;
-      } catch (e) {}
-    }
-    throw new Error("QR muy grande");
-  }
-  function qrCanvas(text, color = "#1B396A") {
-    const q = makeQR(text), n = q.getModuleCount(), total = n + 8, scale = Math.max(3, Math.ceil(720 / total));
-    const c = document.createElement("canvas");
-    c.width = c.height = total * scale;
-    const x = c.getContext("2d");
-    x.fillStyle = "#fff"; x.fillRect(0, 0, c.width, c.height);
-    x.fillStyle = color;
-    for (let r = 0; r < n; r++) for (let k = 0; k < n; k++) if (q.isDark(r, k)) x.fillRect((k + 4) * scale, (r + 4) * scale, scale, scale);
-    return c;
-  }
-  function tickVivo() {
-    $$(".qr-box[data-vivo]").forEach((box) => {
-      const p = box._p;
-      if (!p) return;
-      const w = AQSeg.ventanaActual();
-      if (box._w !== w) {
-        box._w = w;
-        const c = qrCanvas(qrTexto(p));
-        c.setAttribute("role", "img");
-        c.setAttribute("aria-label", "Código QR de acceso");
-        const viejo = $("canvas", box);
-        viejo ? viejo.replaceWith(c) : box.prepend(c);
-      }
-      const seg = AQSeg.segundosRestantes();
-      const barra = box.parentElement.querySelector(".barra i");
-      if (barra) barra.style.transform = `scaleX(${seg / (AQSeg.VENTANA_MS / 1000)})`;
-      const txt = box.parentElement.querySelector(".barra-txt");
-      if (txt) txt.textContent = `Se renueva en ${seg} s · código dinámico`;
-    });
-  }
-  setInterval(tickVivo, 1000);
-  let wake = null;
-  async function mantenerPantalla() {
-    try {
-      if (navigator.wakeLock && !wake) {
-        wake = await navigator.wakeLock.request("screen");
-        wake.addEventListener("release", () => (wake = null));
-      }
-    } catch (e) {}
-  }
-  document.addEventListener("visibilitychange", () => {
-    if (!document.hidden && $(".qr-box[data-vivo]")) mantenerPantalla();
+    motivosContainer.appendChild(btn);
   });
 
-  function paseCard(p, { vivo = false, bloqueo = "" } = {}) {
-    const est = p.id ? estadoPase(p) : null;
-    const box = el("div", { class: "qr-box" + (vivo ? "" : " off") });
-    if (vivo) {
-      box.setAttribute("data-vivo", "1");
-      box._p = p;
-      const c = qrCanvas(qrTexto(p));
-      box._w = AQSeg.ventanaActual();
-      box.append(c);
+  const areaSelect = document.getElementById("area");
+  window.ACCESOQR.areas.forEach(a => {
+    const opt = document.createElement("option");
+    opt.value = a;
+    opt.textContent = a;
+    areaSelect.appendChild(opt);
+  });
+})();
+
+// Validación oficial de CURP mexicana (RENAPO)
+function validarCURP(curp) {
+  const re = /^([A-Z][AEIOUX][A-Z]{2}\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])[HM](?:AS|B[CS]|C[CLMSH]|D[FG]|G[TR]|HG|JC|M[CNS]|N[ETL]|OC|PL|Q[TR]|S[PLR]|T[CSL]|VZ|YN|ZS)[B-DF-HJ-NP-TV-Z]{3}[A-Z\d])(\d)$/;
+  const validado = curp.match(re);
+  if (!validado) return false;
+
+  // Verificar dígito verificador
+  const diccionario = "0123456789ABCDEFGHIJKLMNÑOPQRSTUVWXYZ";
+  let lngSuma = 0.0;
+  for (let i = 0; i < 17; i++) {
+    lngSuma += diccionario.indexOf(validado[1].charAt(i)) * (18 - i);
+  }
+  let lngDigito = 10 - (lngSuma % 10);
+  if (lngDigito === 10) lngDigito = 0;
+  return String(lngDigito) === validado[2];
+}
+
+const curpInput = document.getElementById("curp");
+const curpFeedback = document.getElementById("curp-feedback");
+curpInput.addEventListener("input", () => {
+  const val = curpInput.value.toUpperCase().replace(/[^A-Z0-9]/g, "");
+  curpInput.value = val;
+  if (val.length === 0) {
+    curpFeedback.className = "val-msg";
+    curpFeedback.textContent = "Ingresa los 18 caracteres de tu CURP oficial.";
+  } else if (val.length < 18) {
+    curpFeedback.className = "val-msg val-err";
+    curpFeedback.textContent = `Faltan ${18 - val.length} caracteres...`;
+  } else if (validarCURP(val)) {
+    curpFeedback.className = "val-msg val-ok";
+    curpFeedback.textContent = "✓ CURP válida y verificada";
+  } else {
+    curpFeedback.className = "val-msg val-err";
+    curpFeedback.textContent = "✕ Estructura o dígito verificador de CURP inválido";
+  }
+});
+
+// Cámara y compresión de Identificación Oficial
+async function startIdCamera() {
+  try {
+    idStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" }, audio: false });
+    const video = document.getElementById("id-video");
+    video.srcObject = idStream;
+    document.getElementById("cam-wrap").classList.remove("hidden");
+  } catch (err) {
+    alert("No se pudo acceder a la cámara. Puedes usar el botón 'Subir imagen' para tomar la foto con tu celular.");
+  }
+}
+
+function stopIdCamera() {
+  if (idStream) {
+    idStream.getTracks().forEach(t => t.stop());
+    idStream = null;
+  }
+  document.getElementById("cam-wrap").classList.add("hidden");
+}
+
+function compressImageFromSource(sourceEl, width, height) {
+  const canvas = document.getElementById("id-canvas");
+  const maxW = 540;
+  const scale = Math.min(1, maxW / width);
+  canvas.width = Math.round(width * scale);
+  canvas.height = Math.round(height * scale);
+  const ctx = canvas.getContext("2d");
+  ctx.drawImage(sourceEl, 0, 0, canvas.width, canvas.height);
+  return canvas.toDataURL("image/jpeg", 0.65);
+}
+
+function captureIdPhoto() {
+  const video = document.getElementById("id-video");
+  if (!video.videoWidth) return;
+  fotoIdBase64 = compressImageFromSource(video, video.videoWidth, video.videoHeight);
+  stopIdCamera();
+  showIdPreview(fotoIdBase64);
+}
+
+function handleIdFile(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const img = new Image();
+    img.onload = () => {
+      fotoIdBase64 = compressImageFromSource(img, img.width, img.height);
+      showIdPreview(fotoIdBase64);
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+function showIdPreview(dataUrl) {
+  document.getElementById("id-preview").src = dataUrl;
+  document.getElementById("id-preview-wrap").classList.remove("hidden");
+}
+
+function clearIdPhoto() {
+  fotoIdBase64 = "";
+  document.getElementById("id-file").value = "";
+  document.getElementById("id-preview-wrap").classList.add("hidden");
+}
+
+// Generar pase y guardar en Firestore
+document.getElementById("form-pase").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const nombre = document.getElementById("nombre").value.trim().toUpperCase();
+  const curp = document.getElementById("curp").value.trim().toUpperCase();
+  const area = document.getElementById("area").value;
+  const privacidad = document.getElementById("privacidad").checked;
+
+  if (nombre.split(/\s+/).length < 2) {
+    alert("Por favor escribe tu nombre completo (nombre y apellido).");
+    return;
+  }
+  if (!validarCURP(curp)) {
+    alert("Debes ingresar una CURP válida de 18 caracteres para verificar tu identidad.");
+    curpInput.focus();
+    return;
+  }
+  if (!fotoIdBase64) {
+    alert("Por favor toma o sube una foto de tu identificación oficial (INE o credencial).");
+    return;
+  }
+  if (!area) {
+    alert("Selecciona el área de destino.");
+    return;
+  }
+  if (!privacidad) {
+    alert("Debes aceptar el aviso de privacidad.");
+    return;
+  }
+
+  const btn = document.getElementById("btn-generar");
+  btn.disabled = true;
+  btn.textContent = "Guardando en la nube...";
+
+  const ahora = new Date();
+  const fin = new Date(ahora.getTime() + window.ACCESOQR.ventanaMinutos * 60000);
+  const pad = n => String(n).padStart(2, "0");
+  const fechaISO = `${ahora.getFullYear()}-${pad(ahora.getMonth() + 1)}-${pad(ahora.getDate())}`;
+  const desde = `${pad(ahora.getHours())}:${pad(ahora.getMinutes())}`;
+  const hasta = `${pad(fin.getHours())}:${pad(fin.getMinutes())}`;
+  const folio = "TM-" + Math.random().toString(36).substring(2, 10).toUpperCase();
+
+  const paseData = {
+    folio,
+    nombre,
+    curp,
+    fotoId: fotoIdBase64,
+    motivo: selectedMotivo,
+    area,
+    fecha: fechaISO,
+    desde,
+    hasta,
+    estado: "pendiente",
+    creado: firebase.firestore.FieldValue.serverTimestamp()
+  };
+
+  try {
+    if (db && authReady) {
+      await db.collection("pases").doc(folio).set(paseData);
+    }
+    localStorage.setItem("pase_" + folio, JSON.stringify(paseData));
+    mostrarPase(paseData);
+  } catch (err) {
+    console.error(err);
+    alert("Error al guardar el pase: " + err.message);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = "✓ Generar mi pase verificado";
+  }
+});
+
+function mostrarPase(pase) {
+  currentPase = pase;
+  document.getElementById("view-form").classList.add("hidden");
+  document.getElementById("view-pase").classList.remove("hidden");
+
+  document.getElementById("p-nombre").textContent = pase.nombre;
+  document.getElementById("p-curp").textContent = pase.curp;
+  document.getElementById("p-area").textContent = pase.area;
+  document.getElementById("p-fecha").textContent = pase.fecha;
+  document.getElementById("p-horario").textContent = `${pase.desde} a ${pase.hasta} h`;
+  document.getElementById("p-motivo").textContent = pase.motivo;
+  document.getElementById("p-folio").textContent = pase.folio;
+  document.getElementById("p-id-img").src = pase.fotoId;
+
+  iniciarQRDinamico(pase.folio);
+
+  // Escuchar cambios de estado en tiempo real desde Caseta
+  if (db && authReady) {
+    db.collection("pases").doc(pase.folio).onSnapshot(doc => {
+      if (doc.exists && doc.data().estado === "dentro") {
+        const badge = document.getElementById("pase-estado");
+        badge.textContent = "● Dentro del Campus";
+        badge.classList.add("dentro");
+      }
+    });
+  }
+}
+
+function iniciarQRDinamico(folio) {
+  if (qrInterval) clearInterval(qrInterval);
+  const qrContainer = document.getElementById("qrcode");
+  let segundos = 15;
+
+  function renderQR() {
+    qrContainer.innerHTML = "";
+    const token = Math.floor(Date.now() / 15000);
+    new QRCode(qrContainer, {
+      text: JSON.stringify({ folio, t: token }),
+      width: 210,
+      height: 210,
+      colorDark: "#1B396A",
+      colorLight: "#FFFFFF"
+    });
+  }
+
+  renderQR();
+  qrInterval = setInterval(() => {
+    segundos--;
+    if (segundos <= 0) {
+      segundos = 15;
+      renderQR();
+    }
+    document.getElementById("qr-timer").textContent = `Se renueva en ${segundos} s · código dinámico`;
+    document.getElementById("qr-bar").style.width = `${(segundos / 15) * 100}%`;
+  }, 1000);
+}
+
+function nuevoPase() {
+  if (qrInterval) clearInterval(qrInterval);
+  document.getElementById("form-pase").reset();
+  clearIdPhoto();
+  curpFeedback.className = "val-msg";
+  curpFeedback.textContent = "Ingresa los 18 caracteres de tu CURP oficial.";
+  document.getElementById("view-pase").classList.add("hidden");
+  document.getElementById("view-form").classList.remove("hidden");
+}
+
+// Navegación entre pestañas
+function switchTab(tab) {
+  document.getElementById("tab-visitante").classList.toggle("active", tab === "visitante");
+  document.getElementById("tab-caseta").classList.toggle("active", tab === "caseta");
+
+  if (tab === "visitante") {
+    stopScanner();
+    document.getElementById("view-caseta").classList.add("hidden");
+    if (currentPase) {
+      document.getElementById("view-pase").classList.remove("hidden");
     } else {
-      box.append(qrCanvas("AccesoQR · completa tus datos", "#54585A"), el("div", { class: "candado" }, icon("lock", 30), bloqueo || "Tu QR aparece aquí cuando generes el pase"));
+      document.getElementById("view-form").classList.remove("hidden");
     }
-    const dato = (k, v) => [el("dt", { text: k }), el("dd", { text: v || "—" })];
-    return el("article", { class: "pase" },
-      el("div", { class: "pase-head" }, logoTecNM(40), el("div", {}, el("strong", { text: "Pase de visita" }), el("small", { text: CFG.institucion })), est && el("span", { class: "st st-" + est, text: ETQ[est] })),
-      el("div", {}, box, vivo && el("div", { class: "barra" }, el("i")), vivo && el("p", { class: "barra-txt", text: "" })),
-      el("div", { class: "corte" }),
-      el("div", { class: "pase-body" },
-        el("h3", { class: "pase-nombre", text: p.nombre || "Tu nombre aparecerá aquí" }),
-        el("dl", { class: "datos" }, dato("Destino", p.area), dato("Fecha", p.fecha ? cap(fechaLarga(p.fecha)) : ""), dato("Horario", p.desde && p.hasta ? `${p.desde} a ${p.hasta} h` : ""), dato("Motivo", p.motivo)),
-        el("div", { class: "pie" }, el("span", { text: "Pase único · 1 entrada y 1 salida" }), el("code", { text: p.id ? p.id.slice(0, 8).toUpperCase() : "········" }))
-      )
-    );
+  } else {
+    document.getElementById("view-form").classList.add("hidden");
+    document.getElementById("view-pase").classList.add("hidden");
+    document.getElementById("view-caseta").classList.remove("hidden");
   }
+}
 
-  const S = { me: null, passes: [], visits: [], sel: null, modo: "card", edit: null, tab: "pase", scan: null };
-  const app = $("#app");
-  let unsubP = () => {}, unsubV = () => {};
-
-  function sesion() {
-    unsubP(); unsubV();
-    unsubP = B.watchMyPasses((l) => {
-      S.passes = l;
-      if (!S.sel || !l.find((p) => p.id === S.sel)) S.sel = l[0] ? l[0].id : null;
-      if (S.tab === "pase" && S.modo === "card") render();
-      badge();
-    });
-    unsubV = B.watchVisits((l) => {
-      S.visits = l;
-      badge();
-      if (S.tab === "registro") render();
-    });
-    render();
-  }
-  function badge() {
-    const b = $("#badge");
-    const n = S.visits.filter((v) => v.estado === "dentro").length;
-    b.hidden = !n;
-    b.textContent = n;
-  }
-  function go(tab) {
-    if (S.tab === "caseta" && tab !== "caseta") detener();
-    S.tab = tab;
-    render();
-    window.scrollTo(0, 0);
-  }
-  $$(".bar button").forEach((b) => b.addEventListener("click", () => go(b.dataset.tab)));
-
-  function render() {
-    $$(".bar button").forEach((b) => (b.dataset.tab === S.tab ? b.setAttribute("aria-current", "page") : b.removeAttribute("aria-current")));
-    const v = el("section", { class: "view" });
-    if (S.tab === "pase") vistaPase(v);
-    else if (S.tab === "caseta") vistaCaseta(v);
-    else vistaRegistro(v);
-    const prevScan = S.tab === "caseta" ? $("#scanner") : null;
-    if (prevScan && S.scan && S.scan.activo) return;
-    app.replaceChildren(v);
-    tickVivo();
-    if (S.tab === "pase" && $(".qr-box[data-vivo]")) mantenerPantalla();
-  }
-
-  /* 1 · MI PASE */
-  const selPass = () => S.passes.find((p) => p.id === S.sel) || null;
-  function vistaPase(v) {
-    v.append(el("p", { class: "eyebrow", text: "Preregistro de visita" }));
-    if (S.modo === "form") return formPase(v);
-    const p = selPass();
-    if (!p) { S.modo = "form"; S.edit = null; return formPase(v); }
-    v.append(el("h1", { text: "Tu pase de entrada" }), el("p", { class: "lead", text: "Muestra esta pantalla en la caseta junto con tu identificación." }));
-    if (S.passes.length > 1) {
-      v.append(el("div", { class: "sel", role: "tablist" },
-        S.passes.map((x) => el("button", { type: "button", "aria-current": x.id === S.sel ? "true" : "false", onclick: () => { S.sel = x.id; render(); } }, `${x.nombre.split(" ")[0]} · ${x.fecha.slice(5).split("-").reverse().join("/")}`))
-      ));
-    }
-    const est = estadoPase(p);
-    const bloqueo = est === "cerrada" ? "Visita cerrada: este pase ya no sirve" : est === "venc" ? "Pase vencido: crea uno nuevo" : "";
-    v.append(paseCard(p, { vivo: !bloqueo, bloqueo }));
-    const editable = p.estado === "pendiente";
-    v.append(el("div", { class: "stack" },
-      editable && el("div", { class: "grid2" },
-        el("button", { class: "btn btn-ghost", onclick: () => { S.modo = "form"; S.edit = p.id; render(); } }, icon("edit"), "Editar"),
-        el("button", { class: "btn btn-danger", onclick: () => borrar(p) }, icon("trash"), "Eliminar")
-      ),
-      el("button", { class: "btn btn-primary btn-lg", onclick: () => { S.modo = "form"; S.edit = null; render(); } }, icon("plus"), "Pase para otra persona")
-    ));
-  }
-  async function borrar(p) {
-    if (!confirm(`¿Eliminar el pase de ${p.nombre}?`)) return;
-    try { await B.deletePass(p.id); S.sel = null; toast("Pase eliminado."); render(); } catch (e) { toast(msgError(e)); }
-  }
-  function defaults() {
-    const now = new Date();
-    const ini = new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(), Math.floor(now.getMinutes() / 15) * 15);
-    const fin = new Date(ini.getTime() + CFG.ventanaMinutos * 60000);
-    const mismo = (d) => todayStr(d) === todayStr(now);
-    return { fecha: todayStr(now), desde: `${pad(ini.getHours())}:${pad(ini.getMinutes())}`, hasta: mismo(fin) ? `${pad(fin.getHours())}:${pad(fin.getMinutes())}` : "23:59" };
-  }
-  function formPase(v) {
-    const ed = S.edit ? S.passes.find((p) => p.id === S.edit) : null;
-    const d = ed || { ...defaults(), nombre: "", area: "", motivo: "" };
-    const esOtroMotivo = d.motivo && !CFG.motivos.includes(d.motivo);
-    const esOtraArea = d.area && !CFG.areas.includes(d.area);
-    const F = {};
-    let mostrar = false;
-    F.nombre = el("input", { type: "text", id: "f-nombre", maxlength: 60, placeholder: "Ej. María Fernanda López", autocomplete: "name", enterkeyhint: "next" });
-    F.nombre.value = d.nombre;
-    F.chips = CFG.motivos.map((m, i) => {
-      const r = el("input", { type: "radio", name: "motivo", value: m, id: "m" + i });
-      if (m === d.motivo || (esOtroMotivo && m === OTRO)) r.checked = true;
-      return r;
-    });
-    F.otroMotivo = el("input", { type: "text", maxlength: 40, placeholder: "¿Cuál es el motivo?" });
-    F.otroMotivo.value = esOtroMotivo ? d.motivo : "";
-    F.area = el("select", { id: "f-area" }, el("option", { value: "", text: "Elige un área…" }), CFG.areas.map((a) => el("option", { value: a, text: a })));
-    F.area.value = esOtraArea ? OTRA : d.area;
-    F.otraArea = el("input", { type: "text", maxlength: 50, placeholder: "Escribe el área o la persona" });
-    F.otraArea.value = esOtraArea ? d.area : "";
-    F.fecha = el("input", { type: "date", min: todayStr() });
-    F.fecha.value = d.fecha;
-    F.desde = el("input", { type: "time" }); F.desde.value = d.desde;
-    F.hasta = el("input", { type: "time" }); F.hasta.value = d.hasta;
-    F.aviso = el("input", { type: "checkbox" }); F.aviso.checked = !!ed;
-    const E = {};
-    const err = (k) => (E[k] = el("p", { class: "err", role: "alert" }));
-    const wOtroMotivo = el("div", { class: "field", hidden: !esOtroMotivo }, F.otroMotivo, err("otroMotivo"));
-    const wOtraArea = el("div", { class: "field", hidden: !esOtraArea }, F.otraArea, err("otraArea"));
-    const resumenHorario = () => `${F.fecha.value === todayStr() ? "Hoy" : F.fecha.value} · ${F.desde.value} a ${F.hasta.value} h`;
-    const sumHor = el("summary", { text: "" });
-    const actualizarSum = () => (sumHor.textContent = `Horario: ${resumenHorario()} · cambiar`);
-    actualizarSum();
-    const motivo = () => (($$('input[name="motivo"]', form).find((r) => r.checked) || {}).value || "");
-    const motivoFinal = () => (motivo() === OTRO ? F.otroMotivo.value.trim() : motivo());
-    const areaFinal = () => (F.area.value === OTRA ? F.otraArea.value.trim() : F.area.value);
-    function validar() {
-      const e = {};
-      const n = F.nombre.value.trim().replace(/\s+/g, " ");
-      if (!n) e.nombre = "Escribe tu nombre completo.";
-      else if (n.length < 5 || !n.includes(" ")) e.nombre = "Escribe nombre y apellido, como en tu identificación.";
-      if (!motivo()) e.motivo = "Elige el motivo de tu visita.";
-      else if (motivo() === OTRO && F.otroMotivo.value.trim().length < 3) e.otroMotivo = "Cuéntanos en pocas palabras el motivo.";
-      if (!F.area.value) e.area = "Elige a dónde vas.";
-      else if (F.area.value === OTRA && F.otraArea.value.trim().length < 3) e.otraArea = "Escribe el área o la persona que visitas.";
-      const hoy = todayStr();
-      if (!F.fecha.value) e.horario = "Elige la fecha.";
-      else if (F.fecha.value < hoy && !(ed && ed.fecha === F.fecha.value)) e.horario = "Esa fecha ya pasó. Elige hoy o un día próximo.";
-      else if (!F.desde.value || !F.hasta.value) e.horario = "Elige hora de llegada y hora límite.";
-      else if (F.hasta.value <= F.desde.value) e.horario = "La hora límite debe ser después de la de llegada.";
-      else if (F.fecha.value === hoy && F.hasta.value <= `${pad(new Date().getHours())}:${pad(new Date().getMinutes())}`) e.horario = "Esa hora ya pasó. Elige una más tarde.";
-      if (!F.aviso.checked) e.aviso = "Para continuar, acepta el aviso de privacidad.";
-      return e;
-    }
-    function pintar() {
-      const e = validar();
-      Object.keys(E).forEach((k) => {
-        E[k].textContent = mostrar ? e[k] || "" : "";
-        const f = E[k].closest(".field,details");
-        if (f) f.classList.toggle("invalid", !!E[k].textContent);
-      });
-      return e;
-    }
-    const campo = (cls, ...kids) => el("div", { class: "field " + (cls || "") }, kids);
-    const form = el("form", { class: "card", novalidate: true, autocomplete: "off" },
-      el("div", { class: "card-head" }, el("h2", { text: ed ? "Editar pase" : "Datos de la visita" }), S.passes.length ? el("button", { type: "button", class: "btn btn-ghost btn-sm", onclick: () => { S.modo = "card"; S.edit = null; render(); } }, "Cancelar") : null),
-      campo("", el("label", { for: "f-nombre" }, "Nombre completo ", el("span", { class: "req", text: "*" })), F.nombre, el("p", { class: "hint", text: "Como aparece en tu identificación." }), err("nombre")),
-      el("fieldset", { class: "field" }, el("legend", {}, "Motivo de la visita ", el("span", { class: "req", text: "*" })), el("div", { class: "chips" }, CFG.motivos.map((m, i) => el("label", { class: "chip" }, F.chips[i], el("span", { text: m })))), err("motivo")),
-      wOtroMotivo,
-      campo("", el("label", { for: "f-area" }, "¿A dónde vas? ", el("span", { class: "req", text: "*" })), F.area, err("area")),
-      wOtraArea,
-      el("details", { class: "mas" }, sumHor,
-        el("div", { class: "field" }, el("label", { text: "Fecha" }), F.fecha),
-        el("div", { class: "row2" }, el("div", { class: "field" }, el("label", { text: "Llego desde" }), F.desde), el("div", { class: "field" }, el("label", { text: "Hasta" }), F.hasta)),
-        el("p", { class: "hint", text: "El pase solo sirve ese día y en ese horario, una vez para entrar y una para salir." }), err("horario")),
-      campo("", el("label", { class: "check" }, F.aviso, el("span", {}, "Acepto el ", el("button", { type: "button", class: "link", onclick: () => { $("#aviso-txt").textContent = CFG.avisoPrivacidad; $("#dlg-aviso").showModal(); } }, "aviso de privacidad"), " para registrar mi visita. ", el("span", { class: "req", text: "*" }))), err("aviso")),
-      el("button", { type: "submit", class: "btn btn-primary btn-lg btn-block", id: "guardar" }, icon("check"), ed ? "Guardar cambios" : "Generar mi pase")
-    );
-    form.addEventListener("input", () => { actualizarSum(); if (mostrar) pintar(); });
-    form.addEventListener("change", (ev) => {
-      wOtroMotivo.hidden = motivo() !== OTRO;
-      wOtraArea.hidden = F.area.value !== OTRA;
-      if (ev.target.name === "motivo" && motivo() === OTRO) F.otroMotivo.focus();
-      if (ev.target === F.area && F.area.value === OTRA) F.otraArea.focus();
-      actualizarSum();
-      if (mostrar) pintar();
-    });
-    form.addEventListener("submit", async (ev) => {
-      ev.preventDefault();
-      mostrar = true;
-      const e = pintar();
-      const primero = Object.keys(e)[0];
-      if (primero) {
-        const f = E[primero].closest(".field,details");
-        if (f) { if (f.tagName === "DETAILS") f.open = true; f.scrollIntoView({ behavior: "smooth", block: "center" }); }
-        toast("Revisa lo marcado en guinda.");
-        return;
-      }
-      const btn = $("#guardar", form);
-      btn.disabled = true;
+// Escáner QR en Caseta
+function startScanner() {
+  if (html5QrScanner) return;
+  html5QrScanner = new Html5Qrcode("reader");
+  html5QrScanner.start(
+    { facingMode: "environment" },
+    { fps: 10, qrbox: { width: 220, height: 220 } },
+    (decodedText) => {
       try {
-        const guardado = await B.savePass({ id: S.edit, nombre: F.nombre.value.trim().replace(/\s+/g, " "), area: areaFinal(), motivo: motivoFinal(), fecha: F.fecha.value, desde: F.desde.value, hasta: F.hasta.value });
-        if (!S.passes.find((p) => p.id === guardado.id)) S.passes.unshift(guardado);
-        else S.passes = S.passes.map((p) => (p.id === guardado.id ? guardado : p));
-        S.sel = guardado.id; S.modo = "card"; S.edit = null;
-        toast(ed ? "Cambios guardados. El QR se actualizó." : "¡Tu pase está listo!");
-        render(); window.scrollTo(0, 0);
-      } catch (er) {
-        btn.disabled = false;
-        toast(msgError(er));
+        const data = JSON.parse(decodedText);
+        if (data.folio) {
+          stopScanner();
+          validarPorFolio(data.folio);
+        }
+      } catch {
+        stopScanner();
+        validarPorFolio(decodedText.trim());
       }
-    });
-    v.append(el("h1", { text: ed ? "Editar pase" : "Un pase QR en lugar de una libreta" }), el("p", { class: "lead", text: ed ? "Cambia lo que necesites; el QR se actualiza al guardar." : "Llena tus datos una sola vez. Tu pase aparece al instante." }), form);
-  }
+    },
+    () => {}
+  ).catch(err => alert("No se pudo iniciar la cámara del escáner: " + err));
+}
 
-  /* 2 · CASETA (habilitada en cualquier dispositivo) */
-  function vistaCaseta(v) {
-    v.append(el("p", { class: "eyebrow", text: "Control de acceso" }), el("h1", { text: "Caseta de acceso" }));
-    const scanner = el("div", { class: "scanner", id: "scanner" },
-      el("video", { id: "video", playsinline: true, autoplay: true, muted: true }),
-      el("div", { class: "marco" }, el("i"), el("i"), el("i"), el("i")),
-      el("div", { class: "scan-idle" }, icon("scan", 46), el("p", { text: "Activa la cámara o sube una foto del QR desde este dispositivo" }))
-    );
-    if (S.scan && S.scan.activo) scanner.classList.add("live");
-    const resultado = el("div", { class: "result vacio", id: "resultado" }, icon("pase", 40), el("h2", { text: "Esperando un pase" }), el("p", {}, "Escanea el QR o pega el enlace para validar entrada o salida."));
-    const codigo = el("textarea", { id: "codigo", rows: 3, placeholder: "Pega aquí el enlace o código del pase" });
-    const foto = el("input", { type: "file", accept: "image/*", capture: "environment", class: "sr", id: "foto" });
-    foto.addEventListener("change", async () => {
-      if (!foto.files[0]) return;
-      const t = await leerFoto(foto.files[0]);
-      foto.value = "";
-      t ? manejar(t) : toast("No se encontró un QR en la imagen. Acerca más el código.");
-    });
-    v.append(
-      el("div", { class: "card" },
-        scanner,
-        el("div", { class: "stack" },
-          el("button", { class: "btn btn-primary btn-lg btn-block", id: "btn-scan", onclick: () => (S.scan && S.scan.activo ? detener() : iniciar()) }, icon("scan"), S.scan && S.scan.activo ? "Detener cámara" : "Escanear código QR"),
-          el("label", { class: "btn btn-ghost btn-block", for: "foto" }, "Subir foto del QR"),
-          foto
-        ),
-        el("details", { class: "mas", style: "margin-top:12px" },
-          el("summary", { text: "Pegar enlace o código manual" }),
-          codigo,
-          el("div", { class: "grid2", style: "margin-top:10px" },
-            el("button", { class: "btn btn-accent btn-sm", onclick: () => (codigo.value.trim() ? manejar(codigo.value) : toast("Pega primero el enlace del pase.")) }, "Validar código"),
-            el("button", { class: "btn btn-ghost btn-sm", onclick: () => { const p = S.passes[0]; p ? manejar(qrTexto(p)) : toast("No hay pases guardados en este dispositivo."); } }, "Usar pase guardado")
-          )
-        )
-      ),
-      resultado,
-      formSinPase()
-    );
+function stopScanner() {
+  if (html5QrScanner) {
+    html5QrScanner.stop().then(() => {
+      html5QrScanner.clear();
+      html5QrScanner = null;
+    }).catch(() => { html5QrScanner = null; });
   }
-  const res = () => $("#resultado");
-  function resetRes() {
-    const r = res();
-    if (!r) return;
-    r.className = "result vacio";
-    r.replaceChildren(icon("pase", 40), el("h2", { text: "Esperando un pase" }), el("p", {}, "Escanea el QR o pega el enlace para validar entrada o salida."));
-  }
+}
 
-  /* Lector de QR embebido (jsQR minificado integrado, sin fallar por red) */
-  function asegurarJsQR() {
-    if (window.jsQR) return;
-    !function(t,e){"object"==typeof exports&&"undefined"!=typeof module?module.exports=e():"function"==typeof define&&define.amd?define(e):(t="undefined"!=typeof globalThis?globalThis:t||self,t.jsQR=e())}(this,function(){"use strict";
-      // Lector rápido basado en BarcodeDetector nativo y decodificación de cuadrícula de alto contraste
-      function scanCanvas(data, width, height) {
-        if (!window.jsQR) return null;
-        return window.jsQR(data, width, height, { inversionAttempts: "attemptBoth" });
-      }
-      return scanCanvas;
-    });
-  }
+async function validarPorFolio(folio) {
+  const out = document.getElementById("scan-output");
+  if (!folio) return;
+  out.classList.remove("hidden", "err");
+  out.className = "scan-result";
+  out.innerHTML = "Buscando registro en la nube...";
 
-  async function cargarLectorExterno() {
-    if (typeof window.jsQR === "function" && window.jsQR.length >= 3) return true;
-    const urls = [
-      "https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js",
-      "https://unpkg.com/jsqr@1.4.0/dist/jsQR.js"
-    ];
-    for (const src of urls) {
-      const ok = await new Promise((resolve) => {
-        const s = document.createElement("script");
-        s.src = src;
-        s.async = true;
-        s.onload = () => resolve(typeof window.jsQR === "function" && window.jsQR.length >= 3);
-        s.onerror = () => resolve(false);
-        document.head.appendChild(s);
-      });
-      if (ok) return true;
+  try {
+    let pase = null;
+    if (db && authReady) {
+      const snap = await db.collection("pases").doc(folio).get();
+      if (snap.exists) pase = snap.data();
     }
-    return false;
-  }
+    if (!pase) {
+      const local = localStorage.getItem("pase_" + folio);
+      if (local) pase = JSON.parse(local);
+    }
 
-  async function iniciar() {
-    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-      return toast("Este dispositivo no permite cámara directa aquí; usa «Subir foto del QR» o pega el enlace.");
-    }
-    let stream;
-    try {
-      stream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: { ideal: "environment" }, width: { ideal: 1280 }, height: { ideal: 720 } },
-        audio: false
-      });
-    } catch (e) {
-      return toast(e.name === "NotAllowedError" ? "Permite el acceso a la cámara en el navegador para escanear." : "No se pudo abrir la cámara; sube una foto del QR o pega el enlace.");
-    }
-    S.scan = { activo: true, stream, detector: null, canvas: null };
-    const video = $("#video");
-    video.srcObject = stream;
-    try { await video.play(); } catch (e) {}
-    $("#scanner").classList.add("live");
-    const btn = $("#btn-scan");
-    if (btn && btn.lastChild) btn.lastChild.textContent = "Detener cámara";
-    if ("BarcodeDetector" in window) {
-      try { S.scan.detector = new BarcodeDetector({ formats: ["qr_code"] }); } catch (e) {}
-    }
-    if (!S.scan.detector) {
-      await cargarLectorExterno();
-    }
-    ciclo();
-  }
-
-  function detener() {
-    if (S.scan && S.scan.stream) S.scan.stream.getTracks().forEach((t) => t.stop());
-    if (S.scan) S.scan.activo = false;
-    const sc = $("#scanner");
-    if (sc) sc.classList.remove("live");
-    const b = $("#btn-scan");
-    if (b && b.lastChild) b.lastChild.textContent = "Escanear código QR";
-  }
-
-  async function ciclo() {
-    const sc = S.scan;
-    if (!sc || !sc.activo) return;
-    const video = $("#video");
-    let texto = null;
-    try {
-      if (sc.detector && video && video.readyState >= 2) {
-        const r = await sc.detector.detect(video);
-        if (r && r.length) texto = r[0].rawValue;
-      } else if (video && video.readyState >= 2 && typeof window.jsQR === "function" && window.jsQR.length >= 3) {
-        const k = Math.min(1, 720 / Math.max(1, video.videoWidth));
-        sc.canvas = sc.canvas || document.createElement("canvas");
-        sc.canvas.width = Math.max(1, Math.round(video.videoWidth * k));
-        sc.canvas.height = Math.max(1, Math.round(video.videoHeight * k));
-        const x = sc.canvas.getContext("2d", { willReadFrequently: true });
-        x.drawImage(video, 0, 0, sc.canvas.width, sc.canvas.height);
-        const im = x.getImageData(0, 0, sc.canvas.width, sc.canvas.height);
-        const c = window.jsQR(im.data, im.width, im.height, { inversionAttempts: "attemptBoth" });
-        if (c && c.data) texto = c.data;
-      }
-    } catch (e) {}
-    if (texto) {
-      if (navigator.vibrate) navigator.vibrate(60);
-      detener();
-      manejar(texto);
+    if (!pase) {
+      out.classList.add("err");
+      out.innerHTML = `<strong>✕ Pase no encontrado</strong><br>El folio <code>${folio}</code> no existe en el sistema.`;
       return;
     }
-    setTimeout(() => requestAnimationFrame(ciclo), 120);
-  }
 
-  async function leerFoto(file) {
-    try {
-      const bmp = await createImageBitmap(file);
-      if ("BarcodeDetector" in window) {
-        try {
-          const r = await new BarcodeDetector({ formats: ["qr_code"] }).detect(bmp);
-          if (r && r.length) return r[0].rawValue;
-        } catch (e) {}
-      }
-      await cargarLectorExterno();
-      if (typeof window.jsQR === "function" && window.jsQR.length >= 3) {
-        for (const k of [1, 0.6, 0.35]) {
-          const c = document.createElement("canvas");
-          c.width = Math.max(1, Math.round(Math.min(bmp.width, 1600) * k));
-          c.height = Math.max(1, Math.round((c.width * bmp.height) / Math.max(1, bmp.width)));
-          const x = c.getContext("2d", { willReadFrequently: true });
-          x.drawImage(bmp, 0, 0, c.width, c.height);
-          const code = window.jsQR(x.getImageData(0, 0, c.width, c.height).data, c.width, c.height, { inversionAttempts: "attemptBoth" });
-          if (code && code.data) return code.data;
-        }
-      }
-    } catch (e) {}
-    return null;
-  }
-
-  function datosDl(p) {
-    return el("dl", { class: "datos" },
-      el("dt", { text: "Destino" }), el("dd", { text: p.area || "Recepción" }),
-      el("dt", { text: "Motivo" }), el("dd", { text: p.motivo || "Visita" }),
-      el("dt", { text: "Fecha" }), el("dd", { text: p.fecha ? cap(fechaLarga(p.fecha)) : cap(fechaLarga(todayStr())) }),
-      el("dt", { text: "Horario" }), el("dd", { text: p.desde && p.hasta ? `${p.desde} a ${p.hasta} h` : "Vigente" })
-    );
-  }
-  const sello = (ok) => el("div", { class: "sello" }, icon(ok ? "check" : "x", 32));
-  function pintarRes(clase, ...kids) {
-    const r = res();
-    if (!r) return;
-    r.className = "result " + clase;
-    r.replaceChildren(...kids);
-    r.scrollIntoView({ behavior: "smooth", block: "nearest" });
-  }
-  function malo(motivo, p) {
-    pintarRes("bad",
-      el("div", { class: "r-head" }, sello(false), el("div", {}, el("h2", { text: "Inválido" }), el("p", { text: "No se registra la entrada" }))),
-      el("p", { class: "motivo-mal", text: motivo }),
-      p && el("p", { class: "r-nombre", text: p.nombre }), p && datosDl(p),
-      el("div", { class: "stack" },
-        el("button", { class: "btn btn-primary btn-lg", onclick: () => { resetRes(); iniciar(); } }, icon("scan"), "Escanear otro"),
-        p && el("button", { class: "btn btn-ghost", onclick: () => { const d = $("details.sinpase"); d.open = true; $("#sp-nombre").value = p.nombre; d.scrollIntoView({ behavior: "smooth", block: "center" }); } }, "Registrar sin pase"))
-    );
-  }
-  async function manejar(texto) {
-    const m = String(texto || "").match(/[#?&]q=([0-9a-f]{32})\.([0-9a-f]{10})/i) || String(texto || "").trim().match(/^([0-9a-f]{32})\.([0-9a-f]{10})$/i);
-    if (!m) return malo("Este código no corresponde a un pase de AccesoQR.");
-    const passId = m[1].toLowerCase();
-    const token = m[2].toLowerCase();
-    let p;
-    try { p = await B.getPass(passId); } catch (e) { return malo(msgError(e)); }
-
-    // Si el pase no está guardado en este dispositivo (ej. se generó en otro celular), permite validarlo si el token coincide con la ventana activa
-    if (!p) {
-      const dummySecret = passId;
-      if (!AQSeg.codigoValido(passId, token) && !AQSeg.codigoValido(passId.slice(0, 16), token)) {
-        // Permite registro directo del pase escaneado desde otro dispositivo
-      }
-      p = {
-        id: passId,
-        secreto: passId,
-        nombre: "Visitante · Pase " + passId.slice(0, 6).toUpperCase(),
-        area: CFG.areas[0] || "Recepción",
-        motivo: CFG.motivos[0] || "Visita",
-        fecha: todayStr(),
-        desde: "00:00",
-        hasta: "23:59",
-        estado: "pendiente",
-        _externo: true
-      };
+    // Marcar entrada en Firestore y registrar visita
+    if (db && authReady) {
+      await db.collection("pases").doc(folio).update({
+        estado: "dentro",
+        entradaRegistrada: firebase.firestore.FieldValue.serverTimestamp()
+      });
+      await db.collection("visitas").add({
+        folio: pase.folio,
+        nombre: pase.nombre,
+        curp: pase.curp,
+        area: pase.area,
+        motivo: pase.motivo,
+        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+      });
     }
 
-    if (!p._externo && !AQSeg.codigoValido(p.secreto, token)) {
-      return malo("El código del QR cambió y ya expiró. Pide mostrar la pantalla actualizada.", p);
-    }
-    if (p.estado === "cerrada") return malo(MSG.usado, p);
-    if (p.estado === "dentro") return confirmarUI(p, "salida");
-    const w = ventana(p);
-    const msgs = {
-      antes: `Todavía no es la hora. El pase vale desde las ${p.desde} h.`,
-      futuro: `Este pase es para el ${fechaLarga(p.fecha)}, no para hoy.`,
-      despues: `El pase venció hoy a las ${p.hasta} h.`,
-      pasado: `Este pase era para el ${fechaLarga(p.fecha)} y ya venció.`
-    };
-    if (w !== "ok") return malo(msgs[w], p);
-    confirmarUI(p, "entrada");
+    out.innerHTML = `
+      <strong style="color:#15803D;font-size:16px;">✓ ACCESO AUTORIZADO · ENTRADA REGISTRADA</strong>
+      <p style="margin:8px 0 4px;"><strong>Visitante:</strong> ${pase.nombre}</p>
+      <p style="margin:4px 0;"><strong>CURP Verificada:</strong> <code>${pase.curp}</code></p>
+      <p style="margin:4px 0;"><strong>Destino:</strong> ${pase.area} (${pase.motivo})</p>
+      <p style="margin:4px 0 10px;"><strong>Horario permitido:</strong> ${pase.desde} a ${pase.hasta} h</p>
+      <div style="border-top:1px solid #BBF7D0;padding-top:8px;">
+        <small style="display:block;font-weight:700;margin-bottom:6px;">Compara con la identificación física del visitante:</small>
+        <img src="${pase.fotoId}" style="width:100%;max-height:180px;object-fit:cover;border-radius:10px;border:1px solid #15803D;">
+      </div>
+    `;
+  } catch (err) {
+    out.classList.add("err");
+    out.innerHTML = `<strong>Error al validar:</strong> ${err.message}`;
   }
-  function confirmarUI(p, accion) {
-    const ent = accion === "entrada";
-    pintarRes("ok",
-      el("div", { class: "r-head" }, sello(true), el("div", {}, el("h2", { text: "Válido" }), el("p", { text: ent ? "Pase vigente · registrar ENTRADA" : "Visita dentro · registrar SALIDA" }))),
-      el("p", { class: "r-nombre", text: p.nombre }), datosDl(p),
-      ent && el("p", { class: "id-aviso" }, icon("check", 22), "Compara la identificación con este nombre. No se guarda ninguna copia."),
-      el("div", { class: "stack" },
-        el("button", { class: "btn btn-accent btn-lg", id: "confirmar", onclick: async (ev) => {
-          ev.currentTarget.disabled = true;
-          try {
-            await (ent ? B.entrada(p.id, p) : B.salida(p.id));
-            toast(ent ? "Entrada registrada." : "Salida registrada.");
-            pintarRes("ok",
-              el("div", { class: "r-head" }, sello(true), el("div", {}, el("h2", { text: ent ? "Entrada registrada" : "Salida registrada" }), el("p", { text: `${p.nombre} · ${pad(new Date().getHours())}:${pad(new Date().getMinutes())} h` }))),
-              el("button", { class: "btn btn-primary btn-lg btn-block", onclick: () => { resetRes(); iniciar(); } }, icon("scan"), "Escanear siguiente")
-            );
-          } catch (e) {
-            malo(msgError(e), p);
-          }
-        } }, icon("check"), ent ? "Confirmar identidad y registrar entrada" : "Registrar salida"),
-        el("button", { class: "btn btn-ghost", onclick: resetRes }, "Cancelar")
-      )
-    );
-  }
-
-  function formSinPase() {
-    const n = el("input", { type: "text", id: "sp-nombre", maxlength: 60, placeholder: "Nombre y apellido" });
-    const mo = el("select", {}, el("option", { value: "", text: "Motivo…" }), CFG.motivos.map((m) => el("option", { value: m, text: m })));
-    const ar = el("select", {}, el("option", { value: "", text: "Área que visita…" }), CFG.areas.map((a) => el("option", { value: a, text: a })));
-    const au = el("input", { type: "text", maxlength: 60, placeholder: "Quién lo autorizó (opcional)" });
-    const er = el("p", { class: "err", role: "alert" });
-    const f = el("form", { novalidate: true, autocomplete: "off" },
-      el("p", { class: "hint", text: "Para quien llega sin pase. Confirma con el área y compara su identificación; luego queda registrado dentro." }),
-      el("div", { class: "field" }, el("label", { text: "Nombre completo" }), n),
-      el("div", { class: "field" }, mo), el("div", { class: "field" }, ar), el("div", { class: "field" }, au), er,
-      el("button", { type: "submit", class: "btn btn-accent btn-block" }, "Registrar entrada sin pase")
-    );
-    f.addEventListener("submit", async (ev) => {
-      ev.preventDefault();
-      const nombre = n.value.trim().replace(/\s+/g, " ");
-      if (nombre.length < 5 || !nombre.includes(" ")) return (er.textContent = "Escribe nombre y apellido.");
-      if (!mo.value) return (er.textContent = "Elige el motivo.");
-      if (!ar.value) return (er.textContent = "Elige el área que visita.");
-      er.textContent = "";
-      try {
-        await B.sinPase({ nombre, area: ar.value, motivo: mo.value, autoriza: au.value.trim() });
-        f.reset();
-        $("details.sinpase").open = false;
-        toast("Entrada sin pase registrada.");
-      } catch (e) {
-        er.textContent = msgError(e);
-      }
-    });
-    return el("details", { class: "card sinpase" }, el("summary", { style: "cursor:pointer;font-weight:700;min-height:44px;display:flex;align-items:center;gap:8px" }, icon("plus"), "Registrar visitante sin pase"), el("div", { style: "padding-top:8px" }, f));
-  }
-
-  /* 3 · REGISTRO */
-  const fechaDe = (x) => todayStr(new Date(x.entrada || x.creado));
-  const ESTADO_V = { dentro: "Dentro", cerrada: "Cerrada" };
-  let repFecha = todayStr();
-
-  function vistaRegistro(v) {
-    v.append(el("p", { class: "eyebrow", text: "Base de datos de visitas" }), el("h1", { text: "¿Quién está dentro?" }));
-    const hoy = todayStr();
-    const dentro = S.visits.filter((x) => x.estado === "dentro");
-    const ents = S.visits.filter((x) => x.entrada && todayStr(new Date(x.entrada)) === hoy).length;
-    const sals = S.visits.filter((x) => x.salida && todayStr(new Date(x.salida)) === hoy).length;
-    const now = new Date();
-    const pasoCierre = `${pad(now.getHours())}:${pad(now.getMinutes())}` >= CFG.horaCierre;
-    const viejas = dentro.filter((x) => fechaDe(x) < hoy);
-    if (dentro.length && (pasoCierre || viejas.length)) {
-      v.append(el("div", { class: "alerta", role: "alert", text: pasoCierre ? `Ya pasó la hora de cierre (${CFG.horaCierre} h) y siguen dentro ${dentro.length}: ${dentro.map((x) => x.nombre).join(", ")}.` : `Hay visitas abiertas de días anteriores: ${viejas.map((x) => x.nombre).join(", ")}.` }));
-    }
-    v.append(el("div", { class: "stats" },
-      el("div", { class: "stat dentro" }, el("b", { text: dentro.length }), el("span", { text: "Dentro ahora" })),
-      el("div", { class: "stat" }, el("b", { text: ents }), el("span", { text: "Entradas hoy" })),
-      el("div", { class: "stat" }, el("b", { text: sals }), el("span", { text: "Salidas hoy" }))
-    ));
-    v.append(el("div", { class: "card" },
-      el("div", { class: "card-head" }, el("h2", { text: "Dentro del campus" })),
-      el("div", { class: "lista" }, dentro.length
-        ? dentro.slice().sort((a, b) => new Date(b.entrada) - new Date(a.entrada)).map((x) =>
-            el("div", { class: "item" },
-              el("div", { class: "item-main" },
-                el("strong", { text: x.nombre }),
-                el("div", { class: "meta", text: `${x.area} · ${x.motivo}${x.tipo === "sin pase" ? " · sin pase" : ""}` }),
-                el("div", { class: "meta" }, "Entró ", el("b", { text: hhmm(x.entrada) }), ` (${hace(x.entrada)})`)
-              ),
-              el("button", { class: "btn btn-ghost btn-sm", onclick: async () => { try { await B.cerrarVisita(x.id); toast("Salida registrada."); } catch (e) { toast(msgError(e)); } } }, "Registrar salida")
-            ))
-        : [el("div", { class: "vacio" }, el("b", { text: "No hay visitantes dentro" }), "Cuando alguien entre por la caseta aparece aquí al instante.")])
-    ));
-
-    const dia = S.visits.filter((x) => fechaDe(x) === repFecha).sort((a, b) => new Date(a.entrada || a.creado) - new Date(b.entrada || b.creado));
-    const fi = el("input", { type: "date", value: repFecha, "aria-label": "Fecha del reporte" });
-    fi.addEventListener("change", () => { repFecha = fi.value || todayStr(); render(); });
-    const cont = (arr, fn) => { const m = new Map(); arr.forEach((x) => m.set(fn(x), (m.get(fn(x)) || 0) + 1)); return [...m.entries()].sort((a, b) => b[1] - a[1]); };
-    const resumen = [["Por área", cont(dia, (x) => x.area).slice(0, 4)], ["Por motivo", cont(dia, (x) => x.motivo)]].filter((g) => g[1].length)
-      .map(([t, pares]) => el("p", { class: "meta", style: "margin:0 0 4px" }, el("b", { text: t + ": " }), pares.map(([k, n]) => `${k} ${n}`).join(" · ")));
-    v.append(el("div", { class: "card" },
-      el("div", { class: "card-head" }, el("h2", { text: "Reporte" }), el("button", { class: "btn btn-accent btn-sm", onclick: exportarCSV }, icon("down", 18), "CSV del mes")),
-      fi,
-      el("div", { style: "margin-top:10px" }, resumen),
-      dia.length ? el("div", { class: "tabla-wrap" }, el("table", { class: "tabla" },
-        el("thead", {}, el("tr", {}, ["Visitante", "Área", "Motivo", "Entrada", "Salida", "Estado"].map((h) => el("th", { text: h })))),
-        el("tbody", {}, dia.map((x) => el("tr", {}, el("td", { text: x.nombre }), el("td", { text: x.area }), el("td", { text: x.motivo }), el("td", { text: x.entrada ? hhmm(x.entrada) : "—" }), el("td", { text: x.salida ? hhmm(x.salida) : "—" }), el("td", { text: ESTADO_V[x.estado] || x.estado }))))
-      )) : el("p", { class: "vacio", style: "margin-top:10px", text: "No hay visitas en esta fecha." })
-    ));
-
-    if (B.mode === "local") {
-      v.append(el("div", { class: "info-bar" },
-        el("p", {}, el("b", { text: CFG.institucion + ". " }), "Registro activo en este dispositivo. Conecta Firebase en el código para compartir registros en tiempo real entre equipos."),
-        el("button", { class: "btn btn-danger btn-sm", onclick: () => { if (confirm("¿Borrar todos los registros guardados en este dispositivo?")) { B.demoReset(); S.sel = null; toast("Registros borrados."); } } }, "Limpiar registros locales")
-      ));
-    }
-  }
-
-  function exportarCSV() {
-    const mes = repFecha.slice(0, 7);
-    const rows = S.visits.filter((x) => fechaDe(x).startsWith(mes)).sort((a, b) => new Date(a.entrada || a.creado) - new Date(b.entrada || b.creado));
-    if (!rows.length) return toast("No hay visitas en ese mes para exportar.");
-    const q = (s) => '"' + String(s == null ? "" : s).replace(/"/g, '""') + '"';
-    const csv = [["Fecha", "Visitante", "Área", "Motivo", "Tipo", "Entrada", "Salida", "Estado"].map(q).join(","),
-      ...rows.map((x) => [fechaDe(x), x.nombre, x.area, x.motivo, x.tipo || "", x.entrada ? hhmm(x.entrada) : "", x.salida ? hhmm(x.salida) : "", ESTADO_V[x.estado] || x.estado].map(q).join(","))].join("\r\n");
-    const a = el("a", { href: URL.createObjectURL(new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8" })), download: `accesoqr_${mes}.csv` });
-    document.body.append(a);
-    a.click();
-    a.remove();
-    toast("Reporte exportado.");
-  }
-
-  function abrirSetup() {
-    const dlg = $("#dlg-setup");
-    const origin = location.hostname || "TU-USUARIO.github.io";
-    const area = el("textarea", { readonly: true, "aria-label": "Reglas de Firestore", rows: 6 });
-    area.value = reglas();
-    const cop = (txt, ok) => navigator.clipboard.writeText(txt).then(() => toast(ok), () => { area.select(); toast("Selecciona y copia el texto."); });
-    const paso = (t, ...c) => el("li", {}, el("b", { text: t }), el("br"), ...c);
-    dlg.replaceChildren(
-      el("h2", { text: B.mode === "firebase" ? "Conexión en la nube activa" : "Sincronización entre dispositivos" }),
-      el("p", { text: B.mode === "firebase" ? "Base de datos conectada en tiempo real." : "Para compartir pases y entradas en tiempo real entre todos los celulares o equipos de caseta, conecta un proyecto gratuito de Firebase:" }),
-      el("ol", {},
-        paso("Crea el proyecto. ", "Entra a ", el("a", { href: "https://console.firebase.google.com", target: "_blank", rel: "noopener", text: "console.firebase.google.com" }), " → Agregar proyecto."),
-        paso("Activa el acceso. ", "Authentication → Sign-in method: activa ", el("b", { text: "Anónimo" }), ". En Dominios autorizados agrega ", el("code", { text: origin }), "."),
-        paso("Crea la base. ", "Firestore Database → Crear (modo producción). En Reglas pega esto y Publica:",
-          area, el("button", { type: "button", class: "btn btn-accent btn-sm", style: "margin-top:8px", onclick: () => cop(reglas(), "Reglas copiadas.") }, "Copiar reglas")),
-        paso("Conecta el código. ", "Pega apiKey, authDomain, projectId y appId en el bloque «EDITA AQUÍ» de index.html y guarda el commit.")
-      ),
-      el("button", { class: "btn btn-primary btn-block", onclick: () => dlg.close() }, "Cerrar")
-    );
-    dlg.showModal();
-  }
-  $("#modo").addEventListener("click", abrirSetup);
-  $("#aviso-ok").addEventListener("click", () => $("#dlg-aviso").close());
-  $("#modo").textContent = B.mode === "firebase" ? "En línea · Nube" : "En línea · TecNM";
-  if (B.mode !== "firebase") $("#modo").classList.add("config");
-
-  B.onAuth((u) => {
-    S.me = u;
-    if (u && u.error) toast("No se pudo conectar con Firebase. Revisa la configuración.");
-    if (S.tab !== "pase") detener();
-    sesion();
-  });
-  await B.init();
-})().catch((e) => {
-  console.error(e);
-  const t = document.getElementById("toast");
-  if (t) { t.textContent = "No se pudo iniciar la app. Recarga la página."; t.classList.add("on"); }
-});
+}
 </script>
 </body>
 </html>
