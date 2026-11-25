@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>AccesoQR · Pase de visita · TecNM Matehuala</title>
-  <meta name="description" content="Control de acceso con validación de CURP e Identificación Oficial · TecNM Campus Matehuala.">
+  <meta name="description" content="Control de acceso con validación de CURP, identificación, hora de salida y liberación de pase · TecNM Campus Matehuala.">
   <meta name="theme-color" content="#1B396A">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -16,7 +16,7 @@
     :root{
       --navy:#1B396A;--navy-700:#13294B;--teal:#B38E5D;--teal-600:#9A7646;--teal-50:#F7F2EA;
       --orange:#800020;--orange-700:#610018;--orange-50:#F9ECEF;--slate:#54585A;--mist:#F4F6F9;--line:#D6DCE5;
-      --green:#15803D;--green-bg:#DCFCE7;--red:#B91C1C;--red-bg:#FEE2E2;
+      --green:#15803D;--green-bg:#DCFCE7;--red:#B91C1C;--red-bg:#FEE2E2;--amber:#B45309;--amber-bg:#FEF3C7;
     }
     *{box-sizing:border-box;font-family:'Inter',system-ui,-apple-system,sans-serif}
     body{margin:0;background:var(--mist);color:#0F172A;min-height:100vh;display:flex;flex-direction:column}
@@ -33,15 +33,15 @@
     .tab-btn{border:none;background:none;padding:13px 18px;font-size:14px;font-weight:700;color:var(--slate);cursor:pointer;border-bottom:3px solid transparent;transition:.15s}
     .tab-btn.active{color:var(--navy);border-bottom-color:var(--navy)}
 
-    main{width:100%;max-width:520px;margin:20px auto;padding:0 14px 40px;flex:1}
+    main{width:100%;max-width:540px;margin:20px auto;padding:0 14px 40px;flex:1}
     .card{background:#fff;border-radius:20px;padding:20px;box-shadow:0 8px 28px rgba(27,57,106,.08);border:1px solid var(--line)}
     .hidden{display:none!important}
 
     label.field-lbl{display:block;font-size:13px;font-weight:700;color:var(--navy);margin:14px 0 6px}
     label.field-lbl:first-child{margin-top:0}
     .req{color:var(--orange)}
-    input[type="text"],select{width:100%;padding:12px 14px;border:1.5px solid var(--line);border-radius:12px;font-size:15px;color:#0F172A;background:#fff;transition:.15s}
-    input[type="text"]:focus,select:focus{outline:none;border-color:var(--navy);box-shadow:0 0 0 3px rgba(27,57,106,.12)}
+    input[type="text"],input[type="time"],select{width:100%;padding:12px 14px;border:1.5px solid var(--line);border-radius:12px;font-size:15px;color:#0F172A;background:#fff;transition:.15s}
+    input[type="text"]:focus,input[type="time"]:focus,select:focus{outline:none;border-color:var(--navy);box-shadow:0 0 0 3px rgba(27,57,106,.12)}
     input.uppercase{text-transform:uppercase;letter-spacing:.04em;font-weight:600}
     .hint{font-size:12px;color:var(--slate);margin-top:4px;display:block}
     .val-msg{font-size:12px;font-weight:700;margin-top:5px;display:flex;align-items:center;gap:5px}
@@ -57,25 +57,29 @@
     .id-actions{display:flex;gap:8px;flex-wrap:wrap}
     .btn-sec{flex:1;min-width:130px;padding:10px 12px;border-radius:10px;border:1.5px solid var(--navy);background:#fff;color:var(--navy);font-weight:700;font-size:13px;cursor:pointer;text-align:center}
     .btn-sec:hover{background:var(--mist)}
-    #cam-wrap{margin-top:10px;border-radius:12px;overflow:hidden;background:#000;position:relative}
+    #cam-wrap{margin-top:10px;border-radius:12px;overflow:hidden;background:#000}
     #id-video{width:100%;max-height:240px;object-fit:cover;display:block}
     .snap-bar{display:flex;gap:8px;padding:8px;background:#111827}
-    #id-preview-wrap{margin-top:10px;position:relative}
+    #id-preview-wrap{margin-top:10px}
     #id-preview{width:100%;max-height:200px;object-fit:cover;border-radius:10px;border:1.5px solid var(--navy);display:block}
     .badge-verified{display:inline-flex;align-items:center;gap:5px;background:var(--green-bg);color:var(--green);font-size:12px;font-weight:700;padding:4px 10px;border-radius:999px;margin-top:6px}
 
     .privacy-row{display:flex;align-items:flex-start;gap:10px;margin:16px 0;font-size:13px;color:var(--slate)}
     .privacy-row input{width:18px;height:18px;margin-top:2px;accent-color:var(--navy)}
 
-    .btn-primary{width:100%;padding:14px;border:none;border-radius:14px;background:var(--navy);color:#fff;font-size:15px;font-weight:800;cursor:pointer;transition:.15s}
+    .btn-primary{width:100%;padding:13px 16px;border:none;border-radius:14px;background:var(--navy);color:#fff;font-size:15px;font-weight:800;cursor:pointer;transition:.15s}
     .btn-primary:hover{background:var(--navy-700)}
     .btn-primary:disabled{opacity:.5;cursor:not-allowed}
+
+    .btn-release{width:100%;padding:13px 16px;border:none;border-radius:14px;background:var(--orange);color:#fff;font-size:15px;font-weight:800;cursor:pointer;transition:.15s;margin-top:10px}
+    .btn-release:hover{background:var(--orange-700)}
 
     /* Pase generado */
     .pase{background:#fff;border-radius:22px;overflow:hidden;box-shadow:0 14px 36px rgba(27,57,106,.14);border:1px solid var(--line)}
     .pase-head{background:var(--navy);color:#fff;padding:15px 18px;display:flex;align-items:center;gap:12px;border-bottom:3px solid var(--teal)}
     .st{margin-left:auto;padding:5px 12px;border-radius:999px;font-size:12px;font-weight:800;background:var(--teal-50);color:var(--teal-600)}
     .st.dentro{background:var(--green-bg);color:var(--green)}
+    .st.liberado{background:#E2E8F0;color:#334155}
     .qr-box{padding:22px 20px 10px;display:grid;place-items:center}
     #qrcode{padding:12px;background:#fff;border-radius:12px;border:1px solid var(--line)}
     .barra{height:6px;background:var(--mist);border-radius:3px;margin:10px 24px 6px;overflow:hidden}
@@ -94,6 +98,8 @@
     #reader{width:100%;border-radius:14px;overflow:hidden;border:2px solid var(--navy);background:#000}
     .scan-result{margin-top:16px;padding:16px;border-radius:14px;border:1.5px solid var(--green);background:#F0FDF4}
     .scan-result.err{border-color:var(--red);background:var(--red-bg)}
+    .scan-result.warn{border-color:var(--amber);background:var(--amber-bg)}
+    .salida-box{margin-top:12px;padding:12px;background:#fff;border-radius:12px;border:1px solid var(--line)}
   </style>
 </head>
 <body>
@@ -123,7 +129,7 @@
     <form id="form-pase" novalidate>
       <label class="field-lbl" for="nombre">Nombre completo <span class="req">*</span></label>
       <input type="text" id="nombre" placeholder="Ej. María Fernanda López" required autocomplete="name">
-      <span class="hint">Tal como aparece en tu identificación oficial.</span>
+      <span class="val-msg" id="nombre-feedback">Escribe nombre y apellido reales (sin nombres ficticios o de una sola palabra).</span>
 
       <label class="field-lbl" for="curp">CURP (18 caracteres) <span class="req">*</span></label>
       <input type="text" id="curp" class="uppercase" maxlength="18" placeholder="Ej. LOMF950412MSLLRR09" required>
@@ -201,6 +207,8 @@
           <dt>Destino</dt><dd id="p-area"></dd>
           <dt>Fecha</dt><dd id="p-fecha"></dd>
           <dt>Horario</dt><dd id="p-horario"></dd>
+          <dt>Entrada</dt><dd id="p-entrada">Aún no registrada</dd>
+          <dt>Salida</dt><dd id="p-salida">Pendiente de liberar</dd>
           <dt>Motivo</dt><dd id="p-motivo"></dd>
           <dt>Folio</dt><dd id="p-folio" style="font-family:monospace;font-size:12px;"></dd>
         </dl>
@@ -216,8 +224,8 @@
 
   <!-- VISTA 3: CASETA / ESCÁNER -->
   <section id="view-caseta" class="card hidden">
-    <h2 style="margin:0 0 6px;font-size:18px;color:var(--navy);">Validación en Caseta</h2>
-    <p style="margin:0 0 14px;font-size:13px;color:var(--slate);">Escanea el código QR del visitante o ingresa su folio para verificar su CURP, fotografía de identificación y registrar su entrada.</p>
+    <h2 style="margin:0 0 6px;font-size:18px;color:var(--navy);">Validación y Control de Salida en Caseta</h2>
+    <p style="margin:0 0 14px;font-size:13px;color:var(--slate);">Escanea el código QR o ingresa el folio para verificar la CURP y la identificación, registrar la entrada, o marcar la hora de salida y liberar el pase.</p>
 
     <div style="display:flex;gap:8px;margin-bottom:12px;">
       <button type="button" class="btn-primary" style="padding:11px;" onclick="startScanner()">📷 Activar escáner QR</button>
@@ -227,8 +235,8 @@
     <div id="reader"></div>
 
     <div style="margin-top:14px;display:flex;gap:8px;">
-      <input type="text" id="manual-folio" placeholder="O pega el Folio del pase...">
-      <button type="button" class="btn-sec" style="flex:0 0 auto;" onclick="validarPorFolio(document.getElementById('manual-folio').value.trim())">Validar</button>
+      <input type="text" id="manual-folio" placeholder="O pega el Folio del pase (Ej. TM-XXXXXX)...">
+      <button type="button" class="btn-sec" style="flex:0 0 auto;" onclick="validarPorFolio(document.getElementById('manual-folio').value.trim().toUpperCase())">Buscar</button>
     </div>
 
     <div id="scan-output" class="hidden"></div>
@@ -272,7 +280,6 @@ let currentPase = null;
 let qrInterval = null;
 let html5QrScanner = null;
 
-// Inicializar Firebase
 (async function initFirebase() {
   try {
     firebase.initializeApp(window.ACCESOQR.firebase);
@@ -287,7 +294,6 @@ let html5QrScanner = null;
   }
 })();
 
-// Renderizar motivos y áreas
 (function initUI() {
   const motivosContainer = document.getElementById("motivos-list");
   window.ACCESOQR.motivos.forEach((m, idx) => {
@@ -312,21 +318,68 @@ let html5QrScanner = null;
   });
 })();
 
-// Validación oficial de CURP mexicana (RENAPO)
-function validarCURP(curp) {
-  const re = /^([A-Z][AEIOUX][A-Z]{2}\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])[HM](?:AS|B[CS]|C[CLMSH]|D[FG]|G[TR]|HG|JC|M[CNS]|N[ETL]|OC|PL|Q[TR]|S[PLR]|T[CSL]|VZ|YN|ZS)[B-DF-HJ-NP-TV-Z]{3}[A-Z\d])(\d)$/;
-  const validado = curp.match(re);
-  if (!validado) return false;
+function pad2(n) { return String(n).padStart(2, "0"); }
 
-  // Verificar dígito verificador
-  const diccionario = "0123456789ABCDEFGHIJKLMNÑOPQRSTUVWXYZ";
-  let lngSuma = 0.0;
-  for (let i = 0; i < 17; i++) {
-    lngSuma += diccionario.indexOf(validado[1].charAt(i)) * (18 - i);
+function horaActualHHMM() {
+  const d = new Date();
+  return `${pad2(d.getHours())}:${pad2(d.getMinutes())}`;
+}
+
+// Validación antifraude para nombre
+function validarNombreReal(nombre) {
+  const limpio = nombre.trim().replace(/\s+/g, " ");
+  const partes = limpio.split(" ").filter(p => p.length >= 2);
+  if (partes.length < 2) return { ok: false, msg: "Escribe al menos nombre y apellido (mínimo 2 palabras)." };
+  if (/(.)\1{3,}/i.test(limpio)) return { ok: false, msg: "Alerta: se detectaron caracteres repetitivos sospechosos." };
+  if (!/^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ\s'.-]+$/.test(limpio)) return { ok: false, msg: "Solo se permiten letras en el nombre." };
+  return { ok: true, msg: "✓ Nombre completo válido" };
+}
+
+const nombreInput = document.getElementById("nombre");
+const nombreFeedback = document.getElementById("nombre-feedback");
+nombreInput.addEventListener("input", () => {
+  if (!nombreInput.value.trim()) {
+    nombreFeedback.className = "val-msg";
+    nombreFeedback.textContent = "Escribe nombre y apellido reales (sin nombres ficticios o de una sola palabra).";
+    return;
   }
-  let lngDigito = 10 - (lngSuma % 10);
-  if (lngDigito === 10) lngDigito = 0;
-  return String(lngDigito) === validado[2];
+  const res = validarNombreReal(nombreInput.value);
+  nombreFeedback.className = "val-msg " + (res.ok ? "val-ok" : "val-err");
+  nombreFeedback.textContent = res.msg;
+});
+
+// Validación oficial de CURP mexicana (RENAPO + fecha real + dígito verificador)
+function validarCURP(curp) {
+  const re = /^([A-Z][AEIOUX][A-Z]{2})(\d{2})(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])([HM])(AS|B[CS]|C[CLMSH]|D[FG]|G[TR]|HG|JC|M[CNS]|N[ETL]|OC|PL|Q[TR]|S[PLR]|T[CSL]|VZ|YN|ZS)([B-DF-HJ-NP-TV-Z]{3})([A-Z\d])(\d)$/;
+  const m = curp.match(re);
+  if (!m) return { ok: false, motivo: "Formato de CURP inválido (no cumple estructura oficial de 18 caracteres)." };
+
+  const yy = parseInt(m[2], 10);
+  const mm = parseInt(m[3], 10) - 1;
+  const dd = parseInt(m[4], 10);
+  const fullYear = yy <= 30 ? 2000 + yy : 1900 + yy;
+  const fechaObj = new Date(fullYear, mm, dd);
+  if (fechaObj.getFullYear() !== fullYear || fechaObj.getMonth() !== mm || fechaObj.getDate() !== dd) {
+    return { ok: false, motivo: "La fecha de nacimiento codificada en la CURP no existe en el calendario." };
+  }
+
+  const base17 = curp.slice(0, 17);
+  const digitoIngresado = curp.slice(17);
+  const diccionario = "0123456789ABCDEFGHIJKLMNÑOPQRSTUVWXYZ";
+  let suma = 0;
+  for (let i = 0; i < 17; i++) {
+    const idx = diccionario.indexOf(base17.charAt(i));
+    if (idx < 0) return { ok: false, motivo: "Carácter no válido en CURP." };
+    suma += idx * (18 - i);
+  }
+  let digitoEsperado = 10 - (suma % 10);
+  if (digitoEsperado === 10) digitoEsperado = 0;
+
+  if (String(digitoEsperado) !== digitoIngresado) {
+    return { ok: false, motivo: `Dígito verificador incorrecto (posible CURP inventada o alterada; se esperaba ${digitoEsperado}).` };
+  }
+
+  return { ok: true, motivo: "✓ CURP válida y verificada" };
 }
 
 const curpInput = document.getElementById("curp");
@@ -340,12 +393,10 @@ curpInput.addEventListener("input", () => {
   } else if (val.length < 18) {
     curpFeedback.className = "val-msg val-err";
     curpFeedback.textContent = `Faltan ${18 - val.length} caracteres...`;
-  } else if (validarCURP(val)) {
-    curpFeedback.className = "val-msg val-ok";
-    curpFeedback.textContent = "✓ CURP válida y verificada";
   } else {
-    curpFeedback.className = "val-msg val-err";
-    curpFeedback.textContent = "✕ Estructura o dígito verificador de CURP inválido";
+    const res = validarCURP(val);
+    curpFeedback.className = "val-msg " + (res.ok ? "val-ok" : "val-err");
+    curpFeedback.textContent = res.ok ? res.motivo : "✕ " + res.motivo;
   }
 });
 
@@ -357,7 +408,7 @@ async function startIdCamera() {
     video.srcObject = idStream;
     document.getElementById("cam-wrap").classList.remove("hidden");
   } catch (err) {
-    alert("No se pudo acceder a la cámara. Puedes usar el botón 'Subir imagen' para tomar la foto con tu celular.");
+    alert("No se pudo acceder a la cámara. Puedes usar el botón 'Subir imagen'.");
   }
 }
 
@@ -417,22 +468,27 @@ function clearIdPhoto() {
 // Generar pase y guardar en Firestore
 document.getElementById("form-pase").addEventListener("submit", async (e) => {
   e.preventDefault();
-  const nombre = document.getElementById("nombre").value.trim().toUpperCase();
+  const nombre = document.getElementById("nombre").value.trim().replace(/\s+/g, " ").toUpperCase();
   const curp = document.getElementById("curp").value.trim().toUpperCase();
   const area = document.getElementById("area").value;
   const privacidad = document.getElementById("privacidad").checked;
 
-  if (nombre.split(/\s+/).length < 2) {
-    alert("Por favor escribe tu nombre completo (nombre y apellido).");
+  const chkNombre = validarNombreReal(nombre);
+  if (!chkNombre.ok) {
+    alert(chkNombre.msg);
+    nombreInput.focus();
     return;
   }
-  if (!validarCURP(curp)) {
-    alert("Debes ingresar una CURP válida de 18 caracteres para verificar tu identidad.");
+
+  const chkCurp = validarCURP(curp);
+  if (!chkCurp.ok) {
+    alert("Bloqueo de registro: " + chkCurp.motivo);
     curpInput.focus();
     return;
   }
+
   if (!fotoIdBase64) {
-    alert("Por favor toma o sube una foto de tu identificación oficial (INE o credencial).");
+    alert("Debes tomar o subir una foto de tu identificación oficial (INE o credencial).");
     return;
   }
   if (!area) {
@@ -450,10 +506,9 @@ document.getElementById("form-pase").addEventListener("submit", async (e) => {
 
   const ahora = new Date();
   const fin = new Date(ahora.getTime() + window.ACCESOQR.ventanaMinutos * 60000);
-  const pad = n => String(n).padStart(2, "0");
-  const fechaISO = `${ahora.getFullYear()}-${pad(ahora.getMonth() + 1)}-${pad(ahora.getDate())}`;
-  const desde = `${pad(ahora.getHours())}:${pad(ahora.getMinutes())}`;
-  const hasta = `${pad(fin.getHours())}:${pad(fin.getMinutes())}`;
+  const fechaISO = `${ahora.getFullYear()}-${pad2(ahora.getMonth() + 1)}-${pad2(ahora.getDate())}`;
+  const desde = `${pad2(ahora.getHours())}:${pad2(ahora.getMinutes())}`;
+  const hasta = `${pad2(fin.getHours())}:${pad2(fin.getMinutes())}`;
   const folio = "TM-" + Math.random().toString(36).substring(2, 10).toUpperCase();
 
   const paseData = {
@@ -466,6 +521,8 @@ document.getElementById("form-pase").addEventListener("submit", async (e) => {
     fecha: fechaISO,
     desde,
     hasta,
+    horaEntrada: "",
+    horaSalida: "",
     estado: "pendiente",
     creado: firebase.firestore.FieldValue.serverTimestamp()
   };
@@ -489,27 +546,41 @@ function mostrarPase(pase) {
   currentPase = pase;
   document.getElementById("view-form").classList.add("hidden");
   document.getElementById("view-pase").classList.remove("hidden");
+  actualizarVistaPase(pase);
+  iniciarQRDinamico(pase.folio);
 
+  if (db && authReady) {
+    db.collection("pases").doc(pase.folio).onSnapshot(doc => {
+      if (doc.exists) {
+        currentPase = { ...currentPase, ...doc.data() };
+        actualizarVistaPase(currentPase);
+      }
+    });
+  }
+}
+
+function actualizarVistaPase(pase) {
   document.getElementById("p-nombre").textContent = pase.nombre;
   document.getElementById("p-curp").textContent = pase.curp;
   document.getElementById("p-area").textContent = pase.area;
   document.getElementById("p-fecha").textContent = pase.fecha;
   document.getElementById("p-horario").textContent = `${pase.desde} a ${pase.hasta} h`;
+  document.getElementById("p-entrada").textContent = pase.horaEntrada ? `${pase.horaEntrada} h` : "Aún no registrada";
+  document.getElementById("p-salida").textContent = pase.horaSalida ? `${pase.horaSalida} h` : "Pendiente de liberar";
   document.getElementById("p-motivo").textContent = pase.motivo;
   document.getElementById("p-folio").textContent = pase.folio;
   document.getElementById("p-id-img").src = pase.fotoId;
 
-  iniciarQRDinamico(pase.folio);
-
-  // Escuchar cambios de estado en tiempo real desde Caseta
-  if (db && authReady) {
-    db.collection("pases").doc(pase.folio).onSnapshot(doc => {
-      if (doc.exists && doc.data().estado === "dentro") {
-        const badge = document.getElementById("pase-estado");
-        badge.textContent = "● Dentro del Campus";
-        badge.classList.add("dentro");
-      }
-    });
+  const badge = document.getElementById("pase-estado");
+  badge.classList.remove("dentro", "liberado");
+  if (pase.estado === "dentro") {
+    badge.textContent = "● Dentro del Campus";
+    badge.classList.add("dentro");
+  } else if (pase.estado === "liberado") {
+    badge.textContent = "● Pase Liberado";
+    badge.classList.add("liberado");
+  } else {
+    badge.textContent = "● Pendiente";
   }
 }
 
@@ -546,13 +617,14 @@ function nuevoPase() {
   if (qrInterval) clearInterval(qrInterval);
   document.getElementById("form-pase").reset();
   clearIdPhoto();
+  nombreFeedback.className = "val-msg";
+  nombreFeedback.textContent = "Escribe nombre y apellido reales (sin nombres ficticios o de una sola palabra).";
   curpFeedback.className = "val-msg";
   curpFeedback.textContent = "Ingresa los 18 caracteres de tu CURP oficial.";
   document.getElementById("view-pase").classList.add("hidden");
   document.getElementById("view-form").classList.remove("hidden");
 }
 
-// Navegación entre pestañas
 function switchTab(tab) {
   document.getElementById("tab-visitante").classList.toggle("active", tab === "visitante");
   document.getElementById("tab-caseta").classList.toggle("active", tab === "caseta");
@@ -572,7 +644,6 @@ function switchTab(tab) {
   }
 }
 
-// Escáner QR en Caseta
 function startScanner() {
   if (html5QrScanner) return;
   html5QrScanner = new Html5Qrcode("reader");
@@ -584,11 +655,11 @@ function startScanner() {
         const data = JSON.parse(decodedText);
         if (data.folio) {
           stopScanner();
-          validarPorFolio(data.folio);
+          validarPorFolio(data.folio.toUpperCase());
         }
       } catch {
         stopScanner();
-        validarPorFolio(decodedText.trim());
+        validarPorFolio(decodedText.trim().toUpperCase());
       }
     },
     () => {}
@@ -607,9 +678,9 @@ function stopScanner() {
 async function validarPorFolio(folio) {
   const out = document.getElementById("scan-output");
   if (!folio) return;
-  out.classList.remove("hidden", "err");
+  out.classList.remove("hidden", "err", "warn");
   out.className = "scan-result";
-  out.innerHTML = "Buscando registro en la nube...";
+  out.innerHTML = "Buscando y verificando registro en la nube...";
 
   try {
     let pase = null;
@@ -624,15 +695,114 @@ async function validarPorFolio(folio) {
 
     if (!pase) {
       out.classList.add("err");
-      out.innerHTML = `<strong>✕ Pase no encontrado</strong><br>El folio <code>${folio}</code> no existe en el sistema.`;
+      out.innerHTML = `<strong>✕ ALERTA: Pase no encontrado</strong><br>El folio <code>${folio}</code> no existe en el sistema. No permitir acceso.`;
       return;
     }
 
-    // Marcar entrada en Firestore y registrar visita
+    // Verificación antifraude de CURP y nombre al escanear
+    const chkCurp = validarCURP(pase.curp || "");
+    const chkNom = validarNombreReal(pase.nombre || "");
+    if (!chkCurp.ok || !chkNom.ok || !pase.fotoId) {
+      out.classList.add("err");
+      out.innerHTML = `
+        <strong style="color:var(--red);font-size:16px;">✕ ACCESO BLOQUEADO · POSIBLE IRREGULARIDAD</strong>
+        <p style="margin:8px 0 4px;"><strong>Folio:</strong> <code>${pase.folio}</code></p>
+        <p style="margin:4px 0;"><strong>Nombre:</strong> ${pase.nombre || "Sin nombre"}</p>
+        <p style="margin:4px 0;"><strong>CURP:</strong> <code>${pase.curp || "Sin CURP"}</code></p>
+        <p style="margin:8px 0 0;color:var(--red);font-weight:700;">Motivo del bloqueo: ${!chkCurp.ok ? chkCurp.motivo : (!chkNom.ok ? chkNom.msg : "Falta fotografía de identificación oficial.")}</p>
+      `;
+      return;
+    }
+
+    // Si está pendiente -> registrar entrada automáticamente
+    if (pase.estado === "pendiente") {
+      const entradaHHMM = horaActualHHMM();
+      pase.estado = "dentro";
+      pase.horaEntrada = entradaHHMM;
+
+      if (db && authReady) {
+        await db.collection("pases").doc(folio).update({
+          estado: "dentro",
+          horaEntrada: entradaHHMM,
+          entradaRegistrada: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        await db.collection("visitas").add({
+          folio: pase.folio,
+          nombre: pase.nombre,
+          curp: pase.curp,
+          area: pase.area,
+          motivo: pase.motivo,
+          horaEntrada: entradaHHMM,
+          timestamp: firebase.firestore.FieldValue.serverTimestamp()
+        });
+      }
+      localStorage.setItem("pase_" + folio, JSON.stringify(pase));
+    }
+
+    renderFichaCaseta(pase);
+  } catch (err) {
+    out.classList.add("err");
+    out.innerHTML = `<strong>Error al validar:</strong> ${err.message}`;
+  }
+}
+
+function renderFichaCaseta(pase) {
+  const out = document.getElementById("scan-output");
+  out.classList.remove("hidden", "err", "warn");
+  const yaLiberado = pase.estado === "liberado";
+  out.className = "scan-result" + (yaLiberado ? " warn" : "");
+
+  const horaDefectoSalida = pase.horaSalida || horaActualHHMM();
+
+  out.innerHTML = `
+    <strong style="color:${yaLiberado ? "var(--amber)" : "var(--green)"};font-size:16px;">
+      ${yaLiberado ? "● PASE YA LIBERADO · SALIDA REGISTRADA" : "✓ VISITANTE EN CAMPUS · VERIFICACIÓN ACTIVA"}
+    </strong>
+    <p style="margin:8px 0 4px;"><strong>Visitante:</strong> ${pase.nombre}</p>
+    <p style="margin:4px 0;"><strong>CURP Verificada:</strong> <code>${pase.curp}</code></p>
+    <p style="margin:4px 0;"><strong>Destino:</strong> ${pase.area} (${pase.motivo})</p>
+    <p style="margin:4px 0;"><strong>Hora de entrada:</strong> ${pase.horaEntrada || "—"} h</p>
+    <p style="margin:4px 0 10px;"><strong>Hora de salida:</strong> ${pase.horaSalida ? pase.horaSalida + " h" : "Aún no sale"}</p>
+
+    <div class="salida-box">
+      <label for="input-hora-salida" style="display:block;font-size:13px;font-weight:700;color:var(--navy);margin-bottom:6px;">
+        Hora de salida (editable si deseas ajustarla):
+      </label>
+      <input type="time" id="input-hora-salida" value="${horaDefectoSalida}">
+      <button type="button" class="btn-release" onclick="liberarPase('${pase.folio}')">
+        ${yaLiberado ? "↻ Actualizar hora de salida y mantener liberado" : "🔓 Liberar pase y registrar hora de salida"}
+      </button>
+    </div>
+
+    <div style="border-top:1px solid #BBF7D0;padding-top:10px;margin-top:12px;">
+      <small style="display:block;font-weight:700;margin-bottom:6px;">Compara con la identificación física del visitante:</small>
+      <img src="${pase.fotoId}" style="width:100%;max-height:180px;object-fit:cover;border-radius:10px;border:1px solid var(--navy);">
+    </div>
+  `;
+}
+
+async function liberarPase(folio) {
+  const horaSalida = document.getElementById("input-hora-salida").value || horaActualHHMM();
+  try {
+    let pase = null;
+    if (db && authReady) {
+      const snap = await db.collection("pases").doc(folio).get();
+      if (snap.exists) pase = snap.data();
+    }
+    if (!pase) {
+      const local = localStorage.getItem("pase_" + folio);
+      if (local) pase = JSON.parse(local);
+    }
+    if (!pase) return;
+
+    pase.estado = "liberado";
+    pase.horaSalida = horaSalida;
+
     if (db && authReady) {
       await db.collection("pases").doc(folio).update({
-        estado: "dentro",
-        entradaRegistrada: firebase.firestore.FieldValue.serverTimestamp()
+        estado: "liberado",
+        horaSalida: horaSalida,
+        salidaRegistrada: firebase.firestore.FieldValue.serverTimestamp()
       });
       await db.collection("visitas").add({
         folio: pase.folio,
@@ -640,24 +810,20 @@ async function validarPorFolio(folio) {
         curp: pase.curp,
         area: pase.area,
         motivo: pase.motivo,
+        horaEntrada: pase.horaEntrada || "",
+        horaSalida: horaSalida,
+        evento: "salida_liberacion",
         timestamp: firebase.firestore.FieldValue.serverTimestamp()
       });
     }
-
-    out.innerHTML = `
-      <strong style="color:#15803D;font-size:16px;">✓ ACCESO AUTORIZADO · ENTRADA REGISTRADA</strong>
-      <p style="margin:8px 0 4px;"><strong>Visitante:</strong> ${pase.nombre}</p>
-      <p style="margin:4px 0;"><strong>CURP Verificada:</strong> <code>${pase.curp}</code></p>
-      <p style="margin:4px 0;"><strong>Destino:</strong> ${pase.area} (${pase.motivo})</p>
-      <p style="margin:4px 0 10px;"><strong>Horario permitido:</strong> ${pase.desde} a ${pase.hasta} h</p>
-      <div style="border-top:1px solid #BBF7D0;padding-top:8px;">
-        <small style="display:block;font-weight:700;margin-bottom:6px;">Compara con la identificación física del visitante:</small>
-        <img src="${pase.fotoId}" style="width:100%;max-height:180px;object-fit:cover;border-radius:10px;border:1px solid #15803D;">
-      </div>
-    `;
+    localStorage.setItem("pase_" + folio, JSON.stringify(pase));
+    if (currentPase && currentPase.folio === folio) {
+      currentPase = pase;
+      actualizarVistaPase(pase);
+    }
+    renderFichaCaseta(pase);
   } catch (err) {
-    out.classList.add("err");
-    out.innerHTML = `<strong>Error al validar:</strong> ${err.message}`;
+    alert("Error al liberar el pase: " + err.message);
   }
 }
 </script>
